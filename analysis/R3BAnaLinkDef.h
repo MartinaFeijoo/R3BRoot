@@ -20,6 +20,9 @@
 #pragma link off all functions;
 
 #pragma link C++ class R3BAnalysisIncomingFrs+;
+#pragma link C++ class R3BAnalysisIncomingID+;
+#pragma link C++ class R3BIncomingIDPar+;
+#pragma link C++ class R3BAnalysisIncomingIDContFact+;
 #pragma link C++ class R3BGlobalAnalysis+;
 #pragma link C++ class R3BGlobalAnalysisS454+;
 #pragma link C++ class R3BTrackS454+;
