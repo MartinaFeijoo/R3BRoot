@@ -13,7 +13,6 @@
 R3BIncomingIDPar::R3BIncomingIDPar(const TString& name, const TString& title, const TString& context)
     : FairParGenericSet(name, title, context)
     , fNumDet(1)
-    , fBrho(0.)
 {
     fToFoffset    = new TArrayF(fNumDet);
     fPosS2Left    = new TArrayF(fNumDet);
@@ -60,7 +59,6 @@ void R3BIncomingIDPar::putParams(FairParamList* list)
     {
         return;
     }
-    list->add("Brho", fBrho);
     fToFoffset->Set(fNumDet);
     list->add("TofOffset", *fToFoffset);
     fPosS2Left->Set(fNumDet);
@@ -90,17 +88,9 @@ Bool_t R3BIncomingIDPar::getParams(FairParamList* list)
         return kFALSE;
     }
 
-
-
     if (!(list->fill("TofOffset", fToFoffset)))
     {
         LOG(INFO) << "---Could not initialize incomingIDTofOffsetPar";
-        return kFALSE;
-    }
-
-    if (!list->fill("Brho", &fBrho))
-    {
-        LOG(INFO) << "---Could not initialize Brho";
         return kFALSE;
     }
 

@@ -94,7 +94,7 @@ class R3BAnalysisIncomingID : public FairTask
      * Is called by the framework after processing the event loop.
      */
     virtual void FinishTask();
-    virtual void Reset();
+
     void SetBetaCorrectionForZ(Double_t p0, Double_t p1, Double_t p2, Double_t Zprimary, Double_t Zoffset)
     {
         fP0 = p0;

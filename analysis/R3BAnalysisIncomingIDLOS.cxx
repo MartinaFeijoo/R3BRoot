@@ -149,8 +149,6 @@ void R3BAnalysisIncomingID::SetParContainers()
           << "R3BAnalysisIncomingIDPar:: R3BMusicCal2Hit parameters for charge-Z cannot be used here, number of "
              "parameters: "
           << fNumMusicParams;
-
-  return;
 }
 
 void R3BAnalysisIncomingID::SetParameter()
@@ -170,7 +168,6 @@ void R3BAnalysisIncomingID::SetParameter()
     fDispersionS2->AddAt(fIncomingID_Par->GetDispersionS2(i),i-1);
     fBrho0_S2toCC->AddAt(fIncomingID_Par->GetBrho0_S2toCC(i),i-1);
   }
-  return;
 }
 
 InitStatus R3BAnalysisIncomingID::Init()
@@ -232,8 +229,13 @@ InitStatus R3BAnalysisIncomingID::ReInit()
 
 void R3BAnalysisIncomingID::Exec(Option_t* option)
 {
-  // Reset entries in output arrays, local arrays
-  Reset();
+  FairRootManager* mgr = FairRootManager::Instance();
+  if (NULL == mgr)
+  {
+      // FairLogger::GetLogger()->Fatal(MESSAGE_ORIGIN, "FairRootManager not found");
+      LOG(ERROR) << "FairRootManager not found";
+      return;
+  }
 
   double Zmusic = 0., Music_ang = 0.;
   if (fHitItemsMus && fHitItemsMus->GetEntriesFast() > 0)
@@ -344,13 +346,6 @@ void R3BAnalysisIncomingID::FinishEvent()
 }
 
 void R3BAnalysisIncomingID::FinishTask() {}
-
-void R3BAnalysisIncomingID::Reset()
-{
-    LOG(DEBUG) << "Clearing FrsData Structure";
-    if (fFrsDataCA)
-        fFrsDataCA->Clear();
-}
 
 // -----   Private method AddData  --------------------------------------------
 R3BFrsData* R3BAnalysisIncomingID::AddData(Int_t StaId,

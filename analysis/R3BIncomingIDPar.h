@@ -39,7 +39,6 @@ class R3BIncomingIDPar : public FairParGenericSet
     void printParams();
 
     /** Accessor functions **/
-    const Float_t GetBrho()     { return fBrho;  }
     const Float_t GetToFoffset(Int_t det)  { return fToFoffset->GetAt(det-1); }
     const Float_t GetPosS2Left(Int_t det)  { return fPosS2Left->GetAt(det-1); }
     const Float_t GetPosS2Right(Int_t det) { return fPosS2Right->GetAt(det-1); }
@@ -51,7 +50,6 @@ class R3BIncomingIDPar : public FairParGenericSet
     const Float_t GetTof2InvV_p0(Int_t det) { return fTof2InvV_p0->GetAt(det-1); }
     const Float_t GetTof2InvV_p1(Int_t det) { return fTof2InvV_p1->GetAt(det-1); }
 
-    void SetBrho(Float_t value) { fBrho = value; }
     void SetToFoffset(Float_t value, Int_t det) { fToFoffset->AddAt(value, det-1); }
     void SetPosS2Left(Float_t value, Int_t det) { fPosS2Left->AddAt(value, det-1); }
     void SetPosS2Right(Float_t value, Int_t det) { fPosS2Right->AddAt(value, det-1); }
@@ -66,7 +64,6 @@ class R3BIncomingIDPar : public FairParGenericSet
   private:
 
     Int_t fNumDet;
-    Float_t fBrho;
     TArrayF *fToFoffset;
     TArrayF *fPosS2Left, *fPosS2Right;
     TArrayF *fTof2InvV_p0, *fTof2InvV_p1;

@@ -190,7 +190,68 @@ class R3BLosCal2Hit : public FairTask
 
     TClonesArray* fMapped; /**< Array with mapped data - input data. */
 
-
+    TH1F* fhTres_M;
+    TH1F* fhTres_T;
+    TH1F* fhTres_M_corr;
+    TH1F* fhTres_T_corr;
+    TH1F* fhTres_MT_corr;
+    TH1F* fhQ;
+    TH1F* fhQtest;
+    TH2F* fhQ_L;
+    TH2F* fhQ_T;
+    TH2F* fhQ_R;
+    TH2F* fhQ_B;
+    TH2F* fhQ_L_corr;
+    TH2F* fhQ_T_corr;
+    TH2F* fhQ_R_corr;
+    TH2F* fhQ_B_corr;
+    TH2F* fhQ_LB;
+    TH2F* fhQ_LT;
+    TH2F* fhQ_RT;
+    TH2F* fhQ_RB;
+    TH2F* fhQ_LB_corr;
+    TH2F* fhQ_LT_corr;
+    TH2F* fhQ_RT_corr;
+    TH2F* fhQ_RB_corr;
+    TH2F* fhQ_vs_X;
+    TH2F* fhQ_vs_Y;
+    TH2F* fhQ_vs_X_corr;
+    TH2F* fhQ_vs_Y_corr;
+    TH2F* fhTM_vs_Q;
+    TH2F* fhTT_vs_Q;
+    TH2F* fhTM_vs_Q_corr;
+    TH2F* fhTT_vs_Q_corr;
+    TH2F* fhXY;
+    TH2F* fhXYT;
+    TH2F* fhXYmean;
+    TH2F* fhXY_ToT;
+    TH2F* fhXYproj;
+    TH2F* fhQ1_vs_Q5;
+    TH2F* fhQ1_vs_Q5_corr;
+    TH2F* fhQ2_vs_Q6;
+    TH2F* fhQ2_vs_Q6_corr;
+    TH2F* fhQ3_vs_Q7;
+    TH2F* fhQ3_vs_Q7_corr;
+    TH2F* fhQ4_vs_Q8;
+    TH2F* fhQ4_vs_Q8_corr;
+    ;
+    TH2F* fhTresX_M;
+    TH2F* fhTresY_M;
+    TH2F* fhTresX_T;
+    TH2F* fhTresY_T;
+    TH2F* fhTresX_M_corr;
+    TH2F* fhTresY_M_corr;
+    TH2F* fhTresX_T_corr;
+    TH2F* fhTresY_T_corr;
+    TH2F* fhTresMvsIcount;
+    TH2F* fhTreswcMvsIcount;
+    TH2F* fhTreswcTvsIcount;
+    TH2F* fhTresTvsIcount;
+    TH2F* fh_los_dt_hits_ToT_corr;
+    TH2F* fh_los_ihit_ToTcorr;
+    TH2F* fhQvsdt[8];
+    TH2F* fhQcorrvsIcount[8];
+    TH2F* fhQvsIcount[8];
 
     Int_t Icount = 0;
 
