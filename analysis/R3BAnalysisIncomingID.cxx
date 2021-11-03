@@ -159,6 +159,9 @@ void R3BAnalysisIncomingID::SetParameter()
    fx0_point = fIncomingID_Par->Getx0_point();
    fy0_point = fIncomingID_Par->Gety0_point();
    frot_ang = fIncomingID_Par->Getrot_ang();
+   fx0_Aq = fIncomingID_Par->Getx0_Aq();
+   fy0_Aq = fIncomingID_Par->Gety0_Aq();
+   fang_Aq = fIncomingID_Par->Getang_Aq();
 
   for (Int_t i = 1; i < fNumDet+1; i++)
   {
@@ -251,11 +254,13 @@ void R3BAnalysisIncomingID::Exec(Option_t* option)
 
   // --- local variables --- //
   Double_t timeLosV[fNumDet];
+  Double_t posLosX_cm[fNumDet];
   Double_t TimeSci2_m1[fNumDet];
   Double_t PosSci2_m1[fNumDet];
   UInt_t nHits = 0;
   Double_t ToFraw_m1 = 0., PosCal_m1 = 0.;
   Double_t Velo_m1 = 0., Beta_m1 = 0., Gamma_m1 = 0., Brho_m1 = 0., AoQ_m1 = 0.;
+  Double_t AoQ_m1_corr=0.;
 
   Int_t multSci2[fNumDet];
   Int_t multLos[fNumDet];
@@ -300,6 +305,7 @@ void R3BAnalysisIncomingID::Exec(Option_t* option)
         if (multLos[numDet-1]==0)
         {
           timeLosV[numDet-1] = hittcal -> GetTime();
+          posLosX_cm[numDet-1] = hittcal->GetX_cm();
           multLos[numDet-1]++;
         }
     } // --- end of loop over hit data --- //
@@ -323,13 +329,14 @@ void R3BAnalysisIncomingID::Exec(Option_t* option)
       PosCal_m1 = PosSci2_m1[i];       // [mm] at S2
       Brho_m1 = fBrho0_S2toCC->GetAt(i) * (1. - PosCal_m1 / fDispersionS2->GetAt(i));
       AoQ_m1 = Brho_m1 / (3.10716 * Beta_m1 * Gamma_m1);
+      AoQ_m1_corr = fy0_Aq + (posLosX_cm[i] - fx0_Aq) * sin(fang_Aq) + (AoQ_m1 - fy0_Aq) * cos(fang_Aq);
       if (Zmusic > 0.)
       {
           double Emus = ((Zmusic + 4.7) / 0.28) * ((Zmusic + 4.7) / 0.28);
           double zcor = sqrt(Emus * Beta_m1) * 0.277;
           double zcorang =
               fy0_point + (Music_ang - fx0_point) * sin(frot_ang) + (zcor - fy0_point) * cos(frot_ang) + 0.2;
-          AddData(1, 2, zcorang, AoQ_m1, Beta_m1, Brho_m1, PosCal_m1, 0.);
+          AddData(1, 2, zcorang, AoQ_m1_corr, Beta_m1, Brho_m1, PosCal_m1, 0.);
       }
     }
   }

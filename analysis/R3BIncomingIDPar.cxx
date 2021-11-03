@@ -76,7 +76,9 @@ void R3BIncomingIDPar::putParams(FairParamList* list)
     list->add("x0_point", fx0_point);
     list->add("y0_point", fy0_point);
     list->add("rot_ang", frot_ang);
-
+    list->add("x0_Aq", fx0_Aq);
+    list->add("y0_Aq", fy0_Aq);
+    list->add("ang_Aq", fang_Aq);
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -145,6 +147,24 @@ Bool_t R3BIncomingIDPar::getParams(FairParamList* list)
     if (!(list->fill("rot_ang", &frot_ang)))
     {
         LOG(INFO) << "---Could not initialize incomingIDrot_angPar";
+        return kFALSE;
+    }
+
+    if (!(list->fill("x0_Aq", &fx0_Aq)))
+    {
+        LOG(INFO) << "---Could not initialize incomingIDx0_AqPar";
+        return kFALSE;
+    }
+
+    if (!(list->fill("y0_Aq", &fy0_Aq)))
+    {
+        LOG(INFO) << "---Could not initialize incomingIDy0_AqPar";
+        return kFALSE;
+    }
+
+    if (!(list->fill("ang_Aq", &fang_Aq)))
+    {
+        LOG(INFO) << "---Could not initialize incomingIDang_AqPar";
         return kFALSE;
     }
     return kTRUE;

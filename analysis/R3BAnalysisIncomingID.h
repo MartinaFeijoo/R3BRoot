@@ -132,6 +132,7 @@ class R3BAnalysisIncomingID : public FairTask
     TArrayF *fBrho0_S2toCC;
     TArrayF *fDispersionS2;
     Float_t fx0_point, fy0_point, frot_ang;
+    Float_t fx0_Aq, fy0_Aq, fang_Aq;
 
     // Parameter containers for R3BMusicPar
     UChar_t fNumMusicParams;

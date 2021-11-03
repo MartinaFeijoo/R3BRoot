@@ -53,7 +53,7 @@ link_directories( ${LINK_DIRECTORIES})
 set(SRCS
 calib/R3BSci2Mapped2Tcal.cxx
 calib/R3BSci2Mapped2Cal.cxx
-calib/R3BSci2Mapped2CalPar.cxx
+params/R3BSci2Mapped2CalPar.cxx
 calib/R3BSci2Tcal2Hit.cxx
 params/R3BSci2HitPar.cxx
 params/R3BSci2ContFact.cxx
