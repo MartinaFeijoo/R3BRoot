@@ -102,18 +102,25 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
 
   private:
     TClonesArray* fMappedItemsCalifa; // Array with mapped items.
-    // TClonesArray* fCalItems;    // Array with cal items.
-    // TClonesArray* fHitItems;    // Array with hit items.
+    TClonesArray* fCalItemsCalifa;    // Array with cal items.
+    TClonesArray* fHitItemsCalifa;    // Array with hit items.
     TClonesArray* fMappedItemsSi; // Array with mapped items.
+    TClonesArray* fCalItemsSi;    // Array with cal items.
+    TClonesArray* fHitItemsSi;    // Array with hit items.
 
     R3BEventHeader* header; // Event header.
     Int_t fTrigger;         // Trigger value.
     Int_t fNEvents;         // Event counter.
     Int_t fNbDet;           // Number of AMS detectors.
+    Int_t fNbCrystals;           // Number of AMS detectors.
 
     // Histograms for map data
     std::vector<TH2F*> fh2_EnergyVsStrip;
-
+    std::vector<TH2F*> fh2_EnergyCalVsStrip;
+    std::vector<TH2F*> fh2_EnergyHitVsStrip;
+    std::vector<TH1F*> fh1_EnergyCalifaCrystals;
+    std::vector<TH1F*> fh1_EnergyCalCalifaCrystals;
+    std::vector<TH1F*> fh1_EnergyHitCalifaCrystals;
   public:
     ClassDefOverride(R3BCalifaJulichOnlineSpectra, 0)
 };

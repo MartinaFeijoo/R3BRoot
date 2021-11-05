@@ -196,8 +196,8 @@ void R3BAmsMapped2StripCal::Exec(Option_t* option)
 
     // Reading the Input -- Mapped Data --
     Int_t nHits = fAmsMappedDataCA->GetEntries();
-    if (nHits != NumStrips * NumDets && nHits > 0)
-        LOG(WARNING) << "R3BAmsMapped2StripCal: nHits!=NumStrips*NumDets";
+    //if (nHits != NumStrips * NumDets && nHits > 0)
+        //LOG(WARNING) << "R3BAmsMapped2StripCal: nHits!=NumStrips*NumDets";
     if (!nHits)
         return;
 

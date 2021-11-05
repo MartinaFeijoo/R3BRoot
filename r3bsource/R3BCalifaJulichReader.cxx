@@ -45,8 +45,8 @@ R3BCalifaJulichReader::~R3BCalifaJulichReader()
 {
     if (fArrayCalifa)
         delete fArrayCalifa;
-    if (fArrayCalifa)
-        delete fArrayCalifa;
+    if (fArrayAms)
+        delete fArrayAms;
 }
 
 Bool_t R3BCalifaJulichReader::Init(ext_data_struct_info* a_struct_info)
@@ -95,7 +95,7 @@ Bool_t R3BCalifaJulichReader::Read()
 
         if (channelNumber < 64)
         new ((*fArrayAms)[fArrayAms->GetEntriesFast()])
-            R3BAmsMappedData(1,channelNumber+1, energy);
+            R3BAmsMappedData(0,channelNumber, energy);
 
         else if (channelNumber < 72)
         new ((*fArrayCalifa)[fArrayCalifa->GetEntriesFast()])

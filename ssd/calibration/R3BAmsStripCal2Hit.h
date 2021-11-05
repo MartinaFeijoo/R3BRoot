@@ -72,6 +72,7 @@ class R3BAmsStripCal2Hit : public FairTask
 
     /** Accessor to set up the threshold for the cluster energy sum **/
     void SetClusterEnergy(Float_t thsum) { fThSum = thsum; }
+    void SetJulichConfiguration() { fPitchK=1875; fPitchS=1875; fScen=30; fKcen=30; }
 
   private:
     void SetParameter();
