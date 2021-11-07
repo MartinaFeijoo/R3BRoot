@@ -155,8 +155,8 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     // Folders for cal data
     TFolder* calfolCalifa = new TFolder("Cal", "Cal Califa info");
     TFolder* calfolSi = new TFolder("CalSi", "Cal Si info");
-    // Folders for hit data
-    TFolder* hitfolCalifa = new TFolder("Hit", "Hit Califa info");
+    // Folders for hit data and correlations
+    TFolder* hitfolCalifa = new TFolder("Correlations", "Hit Califa info");
     TFolder* hitfolSi = new TFolder("HitSi", "Hit Si info");
 
     // Mapped data Si
@@ -227,22 +227,22 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     }
     mainfolCalifa->Add(calfolCalifa);
 
-    // Hit data CALIFA
-    // fh1_EnergyHitCalifaCrystals.resize(fNbCrystals);
-    // for (Int_t i=0; i<fNbCrystals; i++)
-    // {
-    //   sprintf(Name1, "fh1_EnergyHit_CalifaCrystal_%d", i + 1);
-    //   sprintf(Name2, "Energy Hit in Califa crystal: %d", i + 1);
-    //   fh1_EnergyHitCalifaCrystals[i] = new TH1F(Name1, Name2, 3000, 0, 3000);
-    //   fh1_EnergyHitCalifaCrystals[i]->GetXaxis()->SetTitle("Energy [keV]");
-    //   fh1_EnergyHitCalifaCrystals[i]->GetYaxis()->SetTitle("counts");
-    //   fh1_EnergyHitCalifaCrystals[i]->GetYaxis()->SetTitleOffset(1.4);
-    //   fh1_EnergyHitCalifaCrystals[i]->GetXaxis()->CenterTitle(true);
-    //   fh1_EnergyHitCalifaCrystals[i]->GetYaxis()->CenterTitle(true);
-    //   fh1_EnergyHitCalifaCrystals[i]->Draw("col");
-    //   hitfolCalifa->Add(fh1_EnergyHitCalifaCrystals[i]);
-    // }
-    // mainfolCalifa->Add(hitfolCalifa);
+    // energy correlations CALIFA
+    fh2_EnergyCorrelationsCrystals.resize(12);
+    for (Int_t i=0; i<12; i++)
+    {
+      sprintf(Name1, "fh2_EnergyCorrelationsCrystals_%d", i);
+      sprintf(Name2, "Energy Hit in Califa crystal");
+      fh2_EnergyCorrelationsCrystals[i] = new TH2F(Name1, Name2, 3000, 0, 3000, 3000,0,3000);
+      fh2_EnergyCorrelationsCrystals[i]->GetXaxis()->SetTitle("Energy [keV]");
+      fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->SetTitle("counts");
+      fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->SetTitleOffset(1.4);
+      fh2_EnergyCorrelationsCrystals[i]->GetXaxis()->CenterTitle(true);
+      fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->CenterTitle(true);
+      fh2_EnergyCorrelationsCrystals[i]->Draw("col");
+      hitfolCalifa->Add(fh2_EnergyCorrelationsCrystals[i]);
+    }
+    mainfolCalifa->Add(hitfolCalifa);
 
     // Hit data Si
     fh2_EnergyHitVsStrip.resize(fNbDet);
@@ -250,7 +250,7 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     { // one histo per detector
         sprintf(Name1, "fh2_energyHit_vs_strip_det_%d", i + 1);
         sprintf(Name2, "Energy hit vs strip number for Si Det: %d", i + 1);
-        fh2_EnergyHitVsStrip[i] = new TH2F(Name1, Name2, 90, -30, 30, 90, -30, 30);
+        fh2_EnergyHitVsStrip[i] = new TH2F(Name1, Name2, 32, -30, 30, 32, -30, 30);
         fh2_EnergyHitVsStrip[i]->GetXaxis()->SetTitle("Position X [mm]");
         fh2_EnergyHitVsStrip[i]->GetYaxis()->SetTitle("Position Y [mm]");
         fh2_EnergyHitVsStrip[i]->GetYaxis()->SetTitleOffset(1.4);
@@ -284,12 +284,15 @@ void R3BCalifaJulichOnlineSpectra::Reset_CalifaJulich_Histo()
         fh2_EnergyCalVsStrip[i]->Reset();
         fh2_EnergyHitVsStrip[i]->Reset();
     }
+
     for (Int_t i = 0; i < fNbCrystals; i++)
     {
         fh1_EnergyCalifaCrystals[i]->Reset();
         fh1_EnergyCalCalifaCrystals[i]->Reset();
         fh1_EnergyHitCalifaCrystals[i]->Reset();
     }
+
+    for (Int_t i=0;i<12;i++) { fh2_EnergyCorrelationsCrystals[i] -> Reset(); }
 }
 
 void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
@@ -344,7 +347,7 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
         }
     }
 
-    // Fill Cal data
+    // Fill Hit data Si
     if (fHitItemsSi && fHitItemsSi->GetEntriesFast() > 0)
     {
         auto nHits = fHitItemsSi->GetEntriesFast();
@@ -356,18 +359,7 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
             fh2_EnergyHitVsStrip[hit->GetDetId()]->Fill(hit->GetPosLab().X(), hit->GetPosLab().Y());
         }
     }
-    // // Fill hit data
-    // if (fHitItemsCalifa && fHitItemsCalifa->GetEntriesFast() > 0)
-    // {
-    //     auto nHits = fHitItemsCalifa->GetEntriesFast();
-    //     for (Int_t ihit = 0; ihit < nHits; ihit++)
-    //     {
-    //         R3BCalifaHitData* hit = (R3BCalifaHitData*)fHitItemsCalifa->At(ihit);
-    //         if (!hit)
-    //             continue;
-    //         fh1_EnergyHitCalifaCrystals[hit->GetClusterId()-1]->Fill(hit->GetEnergy());
-    //     }
-    // }
+    
 
     fNEvents += 1;
 }
