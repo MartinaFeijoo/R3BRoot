@@ -122,6 +122,7 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
     std::vector<TH1F*> fh1_EnergyCalCalifaCrystals;
     std::vector<TH1F*> fh1_EnergyHitCalifaCrystals;
     std::vector<TH2F*> fh2_EnergyCorrelationsCrystals;
+    TH2F *fh2_EnergyCorrelationsAlv;
   public:
     ClassDefOverride(R3BCalifaJulichOnlineSpectra, 0)
 };

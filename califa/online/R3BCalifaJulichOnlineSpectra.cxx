@@ -233,15 +233,23 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     {
       sprintf(Name1, "fh2_EnergyCorrelationsCrystals_%d", i);
       sprintf(Name2, "Energy Hit in Califa crystal");
-      fh2_EnergyCorrelationsCrystals[i] = new TH2F(Name1, Name2, 3000, 0, 3000, 3000,0,3000);
-      fh2_EnergyCorrelationsCrystals[i]->GetXaxis()->SetTitle("Energy [keV]");
-      fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->SetTitle("counts");
+      fh2_EnergyCorrelationsCrystals[i] = new TH2F(Name1, Name2, 300, 0, 3000, 300,0,3000);
       fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->SetTitleOffset(1.4);
       fh2_EnergyCorrelationsCrystals[i]->GetXaxis()->CenterTitle(true);
       fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->CenterTitle(true);
       fh2_EnergyCorrelationsCrystals[i]->Draw("col");
       hitfolCalifa->Add(fh2_EnergyCorrelationsCrystals[i]);
     }
+
+    fh2_EnergyCorrelationsAlv = new TH2F("fh2_EnergyCorrelationsAlv", "Energies Alv", 300, 0, 3000, 300,0,3000);
+    fh2_EnergyCorrelationsAlv->GetXaxis()->SetTitle("Energy Alv1");
+    fh2_EnergyCorrelationsAlv->GetYaxis()->SetTitle("Energy Alv2");
+    fh2_EnergyCorrelationsAlv->GetYaxis()->SetTitleOffset(1.4);
+    fh2_EnergyCorrelationsAlv->GetXaxis()->CenterTitle(true);
+    fh2_EnergyCorrelationsAlv->GetYaxis()->CenterTitle(true);
+    fh2_EnergyCorrelationsAlv->Draw("col");
+    hitfolCalifa->Add(fh2_EnergyCorrelationsAlv);
+
     mainfolCalifa->Add(hitfolCalifa);
 
     // Hit data Si
@@ -338,13 +346,107 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
     if (fCalItemsCalifa && fCalItemsCalifa->GetEntriesFast() > 0)
     {
         auto nHits = fCalItemsCalifa->GetEntriesFast();
+        Int_t crystals[8];
+        Float_t energies[8];
+        Float_t energy_alv[2]; for (Int_t i=0;i<2;i++) {energy_alv[i]=0.0;}
+        for (Int_t i=0;i<8;i++) {crystals[i]=0; energies[i]=0.0;}
+
         for (Int_t ihit = 0; ihit < nHits; ihit++)
         {
             R3BCalifaCrystalCalData* hit = (R3BCalifaCrystalCalData*)fCalItemsCalifa->At(ihit);
             if (!hit)
                 continue;
             fh1_EnergyCalCalifaCrystals[hit->GetCrystalId()-1]->Fill(hit->GetEnergy());
+            crystals[hit->GetCrystalId()-1]=1;
+            energies[hit->GetCrystalId()-1]=hit->GetEnergy();
         }
+
+        for (Int_t i=0;i<4;i++) {energy_alv[0] =+ energies[i]; energy_alv[1] =+ energies[i+4];}
+
+        if (crystals[0] && crystals[1])
+        {
+          fh2_EnergyCorrelationsCrystals[0]->Fill(energies[0],energies[1]);
+          fh2_EnergyCorrelationsCrystals[0]->GetXaxis()->SetTitle("Energy [keV] crystal 1");
+          fh2_EnergyCorrelationsCrystals[0]->GetYaxis()->SetTitle("Energy [keV] crystal 2");
+        }
+
+        if (crystals[0] && crystals[2])
+        {
+          fh2_EnergyCorrelationsCrystals[1]->Fill(energies[0],energies[2]);
+          fh2_EnergyCorrelationsCrystals[1]->GetXaxis()->SetTitle("Energy [keV] crystal 1");
+          fh2_EnergyCorrelationsCrystals[1]->GetYaxis()->SetTitle("Energy [keV] crystal 3");
+        }
+
+        if (crystals[0] && crystals[3])
+        {
+          fh2_EnergyCorrelationsCrystals[2]->Fill(energies[0],energies[3]);
+          fh2_EnergyCorrelationsCrystals[2]->GetXaxis()->SetTitle("Energy [keV] crystal 1");
+          fh2_EnergyCorrelationsCrystals[2]->GetYaxis()->SetTitle("Energy [keV] crystal 4");
+        }
+
+        if (crystals[1] && crystals[2])
+        {
+          fh2_EnergyCorrelationsCrystals[3]->Fill(energies[1],energies[2]);
+          fh2_EnergyCorrelationsCrystals[3]->GetXaxis()->SetTitle("Energy [keV] crystal 2");
+          fh2_EnergyCorrelationsCrystals[3]->GetYaxis()->SetTitle("Energy [keV] crystal 3");
+        }
+
+        if (crystals[1] && crystals[3])
+        {
+          fh2_EnergyCorrelationsCrystals[4]->Fill(energies[1],energies[3]);
+          fh2_EnergyCorrelationsCrystals[4]->GetXaxis()->SetTitle("Energy [keV] crystal 2");
+          fh2_EnergyCorrelationsCrystals[4]->GetYaxis()->SetTitle("Energy [keV] crystal 4");
+        }
+
+        if (crystals[2] && crystals[3])
+        {
+          fh2_EnergyCorrelationsCrystals[5]->Fill(energies[2],energies[3]);
+          fh2_EnergyCorrelationsCrystals[5]->GetXaxis()->SetTitle("Energy [keV] crystal 3");
+          fh2_EnergyCorrelationsCrystals[5]->GetYaxis()->SetTitle("Energy [keV] crystal 4");
+        }
+
+        if (crystals[4] && crystals[5])
+        {
+          fh2_EnergyCorrelationsCrystals[6]->Fill(energies[4],energies[5]);
+          fh2_EnergyCorrelationsCrystals[6]->GetXaxis()->SetTitle("Energy [keV] crystal 5");
+          fh2_EnergyCorrelationsCrystals[6]->GetYaxis()->SetTitle("Energy [keV] crystal 6");
+        }
+
+        if (crystals[4] && crystals[6])
+        {
+          fh2_EnergyCorrelationsCrystals[7]->Fill(energies[4],energies[6]);
+          fh2_EnergyCorrelationsCrystals[7]->GetXaxis()->SetTitle("Energy [keV] crystal 5");
+          fh2_EnergyCorrelationsCrystals[7]->GetYaxis()->SetTitle("Energy [keV] crystal 7");
+        }
+
+        if (crystals[4] && crystals[7])
+        {
+          fh2_EnergyCorrelationsCrystals[8]->Fill(energies[4],energies[7]);
+          fh2_EnergyCorrelationsCrystals[8]->GetXaxis()->SetTitle("Energy [keV] crystal 5");
+          fh2_EnergyCorrelationsCrystals[8]->GetYaxis()->SetTitle("Energy [keV] crystal 8");
+        }
+
+        if (crystals[5] && crystals[7])
+        {
+          fh2_EnergyCorrelationsCrystals[9]->Fill(energies[5],energies[7]);
+          fh2_EnergyCorrelationsCrystals[9]->GetXaxis()->SetTitle("Energy [keV] crystal 6");
+          fh2_EnergyCorrelationsCrystals[9]->GetYaxis()->SetTitle("Energy [keV] crystal 8");
+        }
+
+        if (crystals[6] && crystals[7])
+        {
+          fh2_EnergyCorrelationsCrystals[10]->Fill(energies[6],energies[7]);
+          fh2_EnergyCorrelationsCrystals[10]->GetXaxis()->SetTitle("Energy [keV] crystal 7");
+          fh2_EnergyCorrelationsCrystals[10]->GetYaxis()->SetTitle("Energy [keV] crystal 8");
+        }
+        if (crystals[5] && crystals[6])
+        {
+          fh2_EnergyCorrelationsCrystals[11]->Fill(energies[5],energies[6]);
+          fh2_EnergyCorrelationsCrystals[11]->GetXaxis()->SetTitle("Energy [keV] crystal 6");
+          fh2_EnergyCorrelationsCrystals[11]->GetYaxis()->SetTitle("Energy [keV] crystal 7");
+        }
+
+      fh2_EnergyCorrelationsAlv->Fill(energy_alv[0],energy_alv[1]);
     }
 
     // Fill Hit data Si
@@ -359,7 +461,7 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
             fh2_EnergyHitVsStrip[hit->GetDetId()]->Fill(hit->GetPosLab().X(), hit->GetPosLab().Y());
         }
     }
-    
+
 
     fNEvents += 1;
 }
@@ -402,6 +504,15 @@ void R3BCalifaJulichOnlineSpectra::FinishTask()
           if (fHitItemsCalifa){ fh1_EnergyHitCalifaCrystals[i]->Write(); }
       }
 
+      if (fCalItemsCalifa)
+      {
+        for (Int_t i=0;i<12;i++)
+        {
+          fh2_EnergyCorrelationsCrystals[i]->Write();
+        }
+      }
+
+      fh2_EnergyCorrelationsAlv->Write();
 }
 
 ClassImp(R3BCalifaJulichOnlineSpectra);
