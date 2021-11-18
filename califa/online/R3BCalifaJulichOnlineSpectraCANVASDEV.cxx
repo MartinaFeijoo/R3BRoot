@@ -12,7 +12,7 @@
  ******************************************************************************/
 
 // ------------------------------------------------------------
-// -----             R3BCalifaJulichOnlineSpectra                 -----
+// -----             R3BCalifaJulichOnlineSpectraCANVASDEV                 -----
 // -----    Created 16/07/21  by J.L. Rodriguez-Sanchez   -----
 // -----          Fill CalifaJulich online histograms             -----
 // ------------------------------------------------------------
@@ -21,7 +21,7 @@
  * This task should fill histograms with CalifaJulich online data
  */
 
-#include "R3BCalifaJulichOnlineSpectra.h"
+#include "R3BCalifaJulichOnlineSpectraCANVASDEV.h"
 #include "R3BAmsMappedData.h"
 #include "R3BAmsStripCalData.h"
 #include "R3BAmsHitData.h"
@@ -49,7 +49,7 @@
 #include <iostream>
 #include <sstream>
 
-R3BCalifaJulichOnlineSpectra::R3BCalifaJulichOnlineSpectra()
+R3BCalifaJulichOnlineSpectraCANVASDEV::R3BCalifaJulichOnlineSpectraCANVASDEV()
     : FairTask("CalifaJulichOnlineSpectra", 1)
     , fMappedItemsCalifa(NULL)
     , fCalItemsCalifa(NULL)
@@ -64,7 +64,7 @@ R3BCalifaJulichOnlineSpectra::R3BCalifaJulichOnlineSpectra()
 {
 }
 
-R3BCalifaJulichOnlineSpectra::R3BCalifaJulichOnlineSpectra(const TString& name, Int_t iVerbose)
+R3BCalifaJulichOnlineSpectraCANVASDEV::R3BCalifaJulichOnlineSpectraCANVASDEV(const TString& name, Int_t iVerbose)
     : FairTask(name, iVerbose)
     , fMappedItemsCalifa(NULL)
     , fCalItemsCalifa(NULL)
@@ -79,9 +79,9 @@ R3BCalifaJulichOnlineSpectra::R3BCalifaJulichOnlineSpectra(const TString& name, 
 {
 }
 
-R3BCalifaJulichOnlineSpectra::~R3BCalifaJulichOnlineSpectra()
+R3BCalifaJulichOnlineSpectraCANVASDEV::~R3BCalifaJulichOnlineSpectraCANVASDEV()
 {
-    LOG(DEBUG) << "R3BCalifaJulichOnlineSpectra::Delete instance";
+    LOG(DEBUG) << "R3BCalifaJulichOnlineSpectraCANVASDEV::Delete instance";
     if (fMappedItemsCalifa)
         delete fMappedItemsCalifa;
     if (fMappedItemsSi)
@@ -94,14 +94,14 @@ R3BCalifaJulichOnlineSpectra::~R3BCalifaJulichOnlineSpectra()
         delete fHitItemsSi;
 }
 
-InitStatus R3BCalifaJulichOnlineSpectra::Init()
+InitStatus R3BCalifaJulichOnlineSpectraCANVASDEV::Init()
 {
-    LOG(INFO) << "R3BCalifaJulichOnlineSpectra::Init()";
+    LOG(INFO) << "R3BCalifaJulichOnlineSpectraCANVASDEV::Init()";
 
     // Looking for FairRootManager
     FairRootManager* mgr = FairRootManager::Instance();
     if (NULL == mgr)
-        LOG(FATAL) << "R3BCalifaJulichOnlineSpectra::FairRootManager not found";
+        LOG(FATAL) << "R3BCalifaJulichOnlineSpectraCANVASDEV::FairRootManager not found";
 
     // Create histograms for all the detectors
 
@@ -109,7 +109,7 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     fMappedItemsSi = (TClonesArray*)mgr->GetObject("AmsMappedData");
     if (!fMappedItemsSi)
     {
-        LOG(FATAL) << "R3BCalifaJulichOnlineSpectra::AmsMappedData not found";
+        LOG(FATAL) << "R3BCalifaJulichOnlineSpectraCANVASDEV::AmsMappedData not found";
         return kFATAL;
     }
 
@@ -117,22 +117,22 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     fMappedItemsCalifa = (TClonesArray*)mgr->GetObject("CalifaMappedData");
     if (!fMappedItemsCalifa)
     {
-        LOG(FATAL) << "R3BCalifaJulichOnlineSpectra::CalifaMappedData not found";
+        LOG(FATAL) << "R3BCalifaJulichOnlineSpectraCANVASDEV::CalifaMappedData not found";
         return kFATAL;
     }
 
     // Get access to Cal data
     fCalItemsCalifa = (TClonesArray*)mgr->GetObject("CalifaCrystalCalData");
     if (!fCalItemsCalifa)
-        LOG(WARNING) << "R3BCalifaJulichOnlineSpectra::CalifaCrystalCalData not found";
+        LOG(WARNING) << "R3BCalifaJulichOnlineSpectraCANVASDEV::CalifaCrystalCalData not found";
 
     fCalItemsSi = (TClonesArray*)mgr->GetObject("AmsStripCalData");
     if (!fCalItemsSi)
-        LOG(WARNING) << "R3BCalifaJulichOnlineSpectra::AmsStripCalData not found";
+        LOG(WARNING) << "R3BCalifaJulichOnlineSpectraCANVASDEV::AmsStripCalData not found";
 
       fHitItemsSi = (TClonesArray*)mgr->GetObject("AmsHitData");
       if (!fHitItemsSi)
-          LOG(WARNING) << "R3BCalifaJulichOnlineSpectra::AmsHitData not found";
+          LOG(WARNING) << "R3BCalifaJulichOnlineSpectraCANVASDEV::AmsHitData not found";
 
 
     // Energy range for strips
@@ -141,22 +141,9 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     Double_t maxE = 3500;
     char Name1[255];
     char Name2[255];
-    char Name3[255];
-    char Name4[255];
 
-    // MAIN FOLDERs
-    TFolder* mainfolCalifa = new TFolder("Califa", "Califa info");
-    TFolder* mainfolSi = new TFolder("Si", "Si info");
-    // Folders for mapped data
-    TFolder* mapfolCalifa = new TFolder("Mapped", "Califa Mapped");
-    TFolder* mapfolSi = new TFolder("MappedSi", "Si Mapped");
-    // Folders for cal data
-    TFolder* calfolCalifa = new TFolder("Cal", "Cal Califa info");
-    TFolder* calfolSi = new TFolder("CalSi", "Cal Si info");
-    // Folders for hit data and correlations
-    TFolder* hitfolCalifa = new TFolder("Correlations", "Hit Califa info");
-    TFolder* hitfolSi = new TFolder("HitSi", "Hit Si info");
 
+    cSilicon = new TCanvas("cSilicon", "cSilicon", 10, 10, 500, 500);
     // Mapped data Si
     fh2_EnergyVsStrip.resize(fNbDet);
     for (Int_t i = 0; i < fNbDet; i++)
@@ -169,19 +156,19 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
         fh2_EnergyVsStrip[i]->GetYaxis()->SetTitleOffset(1.4);
         fh2_EnergyVsStrip[i]->GetXaxis()->CenterTitle(true);
         fh2_EnergyVsStrip[i]->GetYaxis()->CenterTitle(true);
-        fh2_EnergyVsStrip[i]->Draw("colz");
-        mapfolSi->Add(fh2_EnergyVsStrip[i]);
+        fh2_EnergyVsStrip[i]->Draw("col");
     }
-    mainfolSi->Add(mapfolSi);
+
 
     // Mapped data Califa
+
     fh1_MultiplicityGamma = new TH1F("MultGamma", "MultGamma", 40, 0, 20);
     fh1_MultiplicityGamma->GetXaxis()->SetTitle("Multiplicity Gamma");
     fh1_MultiplicityGamma->GetYaxis()->SetTitleOffset(1.4);
     fh1_MultiplicityGamma->GetXaxis()->CenterTitle(true);
     fh1_MultiplicityGamma->GetYaxis()->CenterTitle(true);
     fh1_MultiplicityGamma->Draw("col");
-    mapfolCalifa->Add(fh1_MultiplicityGamma);
+
 
     fh1_MultiplicityProton = new TH1F("MultProton", "MultProton", 40, 0, 20);
     fh1_MultiplicityProton->GetXaxis()->SetTitle("Multiplicity Proton");
@@ -189,29 +176,28 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     fh1_MultiplicityProton->GetXaxis()->CenterTitle(true);
     fh1_MultiplicityProton->GetYaxis()->CenterTitle(true);
     fh1_MultiplicityProton->Draw("col");
-    mapfolCalifa->Add(fh1_MultiplicityProton);
+
 
     fh1_EnergyCalifaCrystals.resize(fNbCrystals);
-    fh2_Map_nf_ns.resize(fNbCrystals);
     for (Int_t i=0; i<fNbCrystals; i++)
     {
-      if (i==0)  {sprintf(Name1, "fh1_energyBoxA_1_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_1_p"); }
-      if (i==1)  {sprintf(Name1, "fh1_energyBoxA_2_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_2_p"); }
-      if (i==2)  {sprintf(Name1, "fh1_energyBoxA_3_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_3_p"); }
-      if (i==3)  {sprintf(Name1, "fh1_energyBoxA_4_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_4_p"); }
-      if (i==4)  {sprintf(Name1, "fh1_energyBoxA_1_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_1_g"); }
-      if (i==5)  {sprintf(Name1, "fh1_energyBoxA_2_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_2_g"); }
-      if (i==6)  {sprintf(Name1, "fh1_energyBoxA_3_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_3_g"); }
-      if (i==7)  {sprintf(Name1, "fh1_energyBoxA_4_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxA_4_g"); }
-      if (i==8)  {sprintf(Name1, "fh1_energyBoxB_1_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_1_p"); }
-      if (i==9)  {sprintf(Name1, "fh1_energyBoxB_2_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_2_p"); }
-      if (i==10) {sprintf(Name1, "fh1_energyBoxB_3_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_3_p"); }
-      if (i==11) {sprintf(Name1, "fh1_energyBoxB_4_p"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_4_p"); }
-      if (i==12) {sprintf(Name1, "fh1_energyBoxB_1_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_1_g"); }
-      if (i==13) {sprintf(Name1, "fh1_energyBoxB_2_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_2_g"); }
-      if (i==14) {sprintf(Name1, "fh1_energyBoxB_3_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_3_g"); }
-      if (i==15) {sprintf(Name1, "fh1_energyBoxB_4_g"); sprintf(Name3, "fh2_Map_nf_ns_BoxB_4_g"); }
-
+      if (i==0) {sprintf(Name1,  "fh1_energyBoxA_1_p"); }
+      if (i==1) {sprintf(Name1,  "fh1_energyBoxA_2_p"); }
+      if (i==2) {sprintf(Name1,  "fh1_energyBoxA_3_p"); }
+      if (i==3) {sprintf(Name1,  "fh1_energyBoxA_4_p"); }
+      if (i==4) {sprintf(Name1,  "fh1_energyBoxA_1_g"); }
+      if (i==5) {sprintf(Name1,  "fh1_energyBoxA_2_g"); }
+      if (i==6) {sprintf(Name1,  "fh1_energyBoxA_3_g"); }
+      if (i==7) {sprintf(Name1,  "fh1_energyBoxA_4_g"); }
+      if (i==8) {sprintf(Name1,  "fh1_energyBoxB_1_p"); }
+      if (i==9) {sprintf(Name1,  "fh1_energyBoxB_2_p"); }
+      if (i==10) {sprintf(Name1, "fh1_energyBoxB_3_p"); }
+      if (i==11) {sprintf(Name1, "fh1_energyBoxB_4_p"); }
+      if (i==12) {sprintf(Name1, "fh1_energyBoxB_1_g"); }
+      if (i==13) {sprintf(Name1, "fh1_energyBoxB_2_g"); }
+      if (i==14) {sprintf(Name1, "fh1_energyBoxB_3_g"); }
+      if (i==15) {sprintf(Name1, "fh1_energyBoxB_4_g"); }
+      //sprintf(Name1, "fh1_energy_CalifaCrystal_%d", i + 1);
       sprintf(Name2, "Energy in Califa crystal: %d", i + 1);
       fh1_EnergyCalifaCrystals[i] = new TH1F(Name1, Name2, 3000, 0, 30000);
       fh1_EnergyCalifaCrystals[i]->GetXaxis()->SetTitle("Energy [channels]");
@@ -220,53 +206,9 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
       fh1_EnergyCalifaCrystals[i]->GetXaxis()->CenterTitle(true);
       fh1_EnergyCalifaCrystals[i]->GetYaxis()->CenterTitle(true);
       fh1_EnergyCalifaCrystals[i]->Draw("col");
-      mapfolCalifa->Add(fh1_EnergyCalifaCrystals[i]);
 
-      sprintf(Name4, "Ns vs Nf: %d", i + 1);
-      fh2_Map_nf_ns[i] = new TH2F(Name3, Name4, 1000, -1000, 20000, 1000, -1000, 20000);
-      fh2_Map_nf_ns[i]->GetXaxis()->SetTitle("nf");
-      fh2_Map_nf_ns[i]->GetYaxis()->SetTitle("ns");
-      fh2_Map_nf_ns[i]->GetYaxis()->SetTitleOffset(1.4);
-      fh2_Map_nf_ns[i]->GetXaxis()->CenterTitle(true);
-      fh2_Map_nf_ns[i]->GetYaxis()->CenterTitle(true);
-      fh2_Map_nf_ns[i]->Draw("col");
-      mapfolCalifa->Add(fh2_Map_nf_ns[i]);
-    }
-    mainfolCalifa->Add(mapfolCalifa);
-
-    for (Int_t i=0;i<4;i++)
-    {
-      sprintf(Name1, "fh2_EnergyCrystal%d", 4-i);
-      sprintf(Name2, "Energy in Crystal %d", 4-i);
-      fh2_EnergyMapCalifa_SiStrip[i] = new TH2F(Name1, Name2, 64, 0, 64, 1000, 0, 300000);
-      fh2_EnergyMapCalifa_SiStrip[i]->GetXaxis()->SetTitle("Strip Number x[0-31],y[32-64]");
-      fh2_EnergyMapCalifa_SiStrip[i]->GetYaxis()->SetTitle("Energy");
-      fh2_EnergyMapCalifa_SiStrip[i]->GetYaxis()->SetTitleOffset(1.4);
-      fh2_EnergyMapCalifa_SiStrip[i]->GetXaxis()->CenterTitle(true);
-      fh2_EnergyMapCalifa_SiStrip[i]->GetYaxis()->CenterTitle(true);
-      fh2_EnergyMapCalifa_SiStrip[i]->Draw("");
-      mapfolSi->Add(fh2_EnergyMapCalifa_SiStrip[i]);
-
-      sprintf(Name3, "fh2_PosX_PosY_crystal_%d", 4-i);
-      sprintf(Name4, "fh2_PosX_PosY crystal %d", 4-i);
-      fh2_PosX_PosY_Califa[i] = new TH2F(Name3, Name4, 34, 0, 34, 34, 0, 34);
-      fh2_PosX_PosY_Califa[i]->GetXaxis()->SetTitle("Strip x");
-      fh2_PosX_PosY_Califa[i]->GetYaxis()->SetTitle("Strip Y");
-      fh2_PosX_PosY_Califa[i]->GetYaxis()->SetTitleOffset(1.4);
-      fh2_PosX_PosY_Califa[i]->GetXaxis()->CenterTitle(true);
-      fh2_PosX_PosY_Califa[i]->GetYaxis()->CenterTitle(true);
-      fh2_PosX_PosY_Califa[i]->Draw("");
-      mapfolSi->Add(fh2_PosX_PosY_Califa[i]);
     }
 
-    fh2_EnergyTotMapCalifa_SiStrip = new TH2F("fh2_EnergyTotMapCalifa_SiStrip", "fh2_EnergyTotMapCalifa_SiStrip", 64, 0, 64, 1000, 0, 300000);
-    fh2_EnergyTotMapCalifa_SiStrip->GetXaxis()->SetTitle("Strip Number x[0-31],y[32-64]");
-    fh2_EnergyTotMapCalifa_SiStrip->GetYaxis()->SetTitle("Energy");
-    fh2_EnergyTotMapCalifa_SiStrip->GetYaxis()->SetTitleOffset(1.4);
-    fh2_EnergyTotMapCalifa_SiStrip->GetXaxis()->CenterTitle(true);
-    fh2_EnergyTotMapCalifa_SiStrip->GetYaxis()->CenterTitle(true);
-    fh2_EnergyTotMapCalifa_SiStrip->Draw("");
-    mapfolSi->Add(fh2_EnergyTotMapCalifa_SiStrip);
 
     // Cal data Si
     fh2_EnergyCalVsStrip.resize(fNbDet);
@@ -281,12 +223,15 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
         fh2_EnergyCalVsStrip[i]->GetXaxis()->CenterTitle(true);
         fh2_EnergyCalVsStrip[i]->GetYaxis()->CenterTitle(true);
         fh2_EnergyCalVsStrip[i]->Draw("col");
-        mapfolSi->Add(fh2_EnergyCalVsStrip[i]);
     }
-    mainfolSi->Add(calfolSi);
+
 
     // Cal data CALIFA
     fh1_EnergyCalCalifaCrystals.resize(fNbCrystals);
+    cEnergyCalCalifa_BoxA_p = new TCanvas("EnergyCalCalifa_BoxA_p", "EnergyCalCalifa_BoxA_p", 10, 10, 500, 500);
+    cEnergyCalCalifa_BoxB_g = new TCanvas("EnergyCalCalifa_BoxB_g", "EnergyCalCalifa_BoxA_g", 10, 10, 500, 500);
+    cEnergyCalCalifa_BoxA_g = new TCanvas("EnergyCalCalifa_BoxA_g", "EnergyCalCalifa_BoxA_g", 10, 10, 500, 500);
+    cEnergyCalCalifa_BoxB_p = new TCanvas("EnergyCalCalifa_BoxB_p", "EnergyCalCalifa_BoxB_p", 10, 10, 500, 500);
     for (Int_t i=0; i<fNbCrystals; i++)
     {
       sprintf(Name2, "Energy calibrated in Califa crystal: %d", i + 1);
@@ -297,52 +242,66 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
         if (i==1) {sprintf(Name1,  "fh1_energyCalBoxA_2_p"); pad=4;}
         if (i==2) {sprintf(Name1,  "fh1_energyCalBoxA_3_p"); pad=3;}
         if (i==3) {sprintf(Name1,  "fh1_energyCalBoxA_4_p"); pad=1;}
+
+        cEnergyCalCalifa_BoxA_p->Divide(2,2);
+        cEnergyCalCalifa_BoxA_p->cd(pad);
         fh1_EnergyCalCalifaCrystals[i] = new TH1F(Name1, Name2, 30000, 0, 300000);
+        fh1_EnergyCalCalifaCrystals[i]->Draw("col");
       }
 
-      if (i<8 && i>3)
+      if (i<7 && i>=4)
       {
         if (i==4) {sprintf(Name1,  "fh1_energyCalBoxA_1_g"); pad=2; }
         if (i==5) {sprintf(Name1,  "fh1_energyCalBoxA_2_g"); pad=4; }
         if (i==6) {sprintf(Name1,  "fh1_energyCalBoxA_3_g"); pad=3; }
         if (i==7) {sprintf(Name1,  "fh1_energyCalBoxA_4_g"); pad=1; }
-        fh1_EnergyCalCalifaCrystals[i] = new TH1F(Name1, Name2, 3000, 0, 30000);
+
+        cEnergyCalCalifa_BoxA_g->Divide(2,2);
+        cEnergyCalCalifa_BoxA_g->cd(pad);
+        fh1_EnergyCalCalifaCrystals[i] = new TH1F(Name1, Name2, 3000, 0, 3000);
+        fh1_EnergyCalCalifaCrystals[i]->Draw("col");
       }
 
-      if (i<12 && i>7)
+      if (i<11 && i>=7)
       {
         if (i==8) {sprintf(Name1,  "fh1_energyCalBoxB_1_p"); pad=2; }
         if (i==9) {sprintf(Name1,  "fh1_energyCalBoxB_2_p"); pad=4; }
         if (i==10) {sprintf(Name1, "fh1_energyCalBoxB_3_p"); pad=3; }
         if (i==11) {sprintf(Name1, "fh1_energyCalBoxB_4_p"); pad=1; }
+
+        cEnergyCalCalifa_BoxB_p->Divide(2,2);
+        cEnergyCalCalifa_BoxB_p->cd(pad);
         fh1_EnergyCalCalifaCrystals[i] = new TH1F(Name1, Name2, 30000, 0, 300000);
+        fh1_EnergyCalCalifaCrystals[i]->Draw("col");
       }
 
-      if (i>11)
+      if (i>=11)
       {
         if (i==12) {sprintf(Name1, "fh1_energyCalBoxB_1_g"); pad=2;}
         if (i==13) {sprintf(Name1, "fh1_energyCalBoxB_2_g"); pad=4;}
         if (i==14) {sprintf(Name1, "fh1_energyCalBoxB_3_g"); pad=3;}
         if (i==15) {sprintf(Name1, "fh1_energyCalBoxB_4_g"); pad=1;}
-       fh1_EnergyCalCalifaCrystals[i] = new TH1F(Name1, Name2, 3000, 0, 30000);
+
+       cEnergyCalCalifa_BoxB_g->Divide(2,2);
+       cEnergyCalCalifa_BoxB_g->cd(pad);
+       fh1_EnergyCalCalifaCrystals[i] = new TH1F(Name1, Name2, 3000, 0, 3000);
        }
 
+      //sprintf(Name1, "fh1_energyCal_CalifaCrystal_%d", i + 1);
       fh1_EnergyCalCalifaCrystals[i]->GetXaxis()->SetTitle("Energy [keV]");
       fh1_EnergyCalCalifaCrystals[i]->GetYaxis()->SetTitle("counts");
       fh1_EnergyCalCalifaCrystals[i]->GetYaxis()->SetTitleOffset(1.4);
       fh1_EnergyCalCalifaCrystals[i]->GetXaxis()->CenterTitle(true);
       fh1_EnergyCalCalifaCrystals[i]->GetYaxis()->CenterTitle(true);
-      fh1_EnergyCalCalifaCrystals[i]->Draw();
-      calfolCalifa->Add(fh1_EnergyCalCalifaCrystals[i]);
+      //fh1_EnergyCalCalifaCrystals[i]->Draw("col");
+
     }
-    mainfolCalifa->Add(calfolCalifa);
 
 
     // energy correlations CALIFA
     fh2_EnergyCorrelationsCrystals.resize(24);
     for (Int_t i=0; i<24; i++)
     {
-      //BoxA
       if (i==0) {sprintf(Name1, "fh2_EnergyCorr_BoxA_1_2_p"); }
       if (i==1) {sprintf(Name1, "fh2_EnergyCorr_BoxA_1_3_p"); }
       if (i==2) {sprintf(Name1, "fh2_EnergyCorr_BoxA_1_4_p"); }
@@ -355,7 +314,7 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
       if (i==9) {sprintf(Name1, "fh2_EnergyCorr_BoxA_2_4_g"); }
       if (i==10) {sprintf(Name1, "fh2_EnergyCorr_BoxA_3_4_g"); }
       if (i==11) {sprintf(Name1, "fh2_EnergyCorr_BoxA_2_3_g"); }
-      //BoxB
+
       if (i==12) {sprintf(Name1, "fh2_EnergyCorr_BoxB_1_2_p"); }
       if (i==13) {sprintf(Name1, "fh2_EnergyCorr_BoxB_1_3_p"); }
       if (i==14) {sprintf(Name1, "fh2_EnergyCorr_BoxB_1_4_p"); }
@@ -372,12 +331,11 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
       sprintf(Name2, "fh2_EnergyCorrelationsCrystals_%d", i);
       if (i<5 || (i>11 && i<18)) {fh2_EnergyCorrelationsCrystals[i] = new TH2F(Name1, Name2, 3000, 0, 300000, 3000,0,300000);}
       else {fh2_EnergyCorrelationsCrystals[i] = new TH2F(Name1, Name2, 3000, 0, 30000, 3000,0,30000);}
-
       fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->SetTitleOffset(1.4);
       fh2_EnergyCorrelationsCrystals[i]->GetXaxis()->CenterTitle(true);
       fh2_EnergyCorrelationsCrystals[i]->GetYaxis()->CenterTitle(true);
-      fh2_EnergyCorrelationsCrystals[i]->Draw("COLZ");
-      hitfolCalifa->Add(fh2_EnergyCorrelationsCrystals[i]);
+      fh2_EnergyCorrelationsCrystals[i]->Draw("colz");
+
     }
 
     fh2_EnergyCorrelationsAlvProton = new TH2F("fh2_EnergyCorrelationsAlvProton", "Energies Alv ProtonRange", 300, 0, 30000, 300,0,30000);
@@ -387,7 +345,7 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     fh2_EnergyCorrelationsAlvProton->GetXaxis()->CenterTitle(true);
     fh2_EnergyCorrelationsAlvProton->GetYaxis()->CenterTitle(true);
     fh2_EnergyCorrelationsAlvProton->Draw("col");
-    hitfolCalifa->Add(fh2_EnergyCorrelationsAlvProton);
+
 
     fh2_EnergyCorrelationsAlvGamma = new TH2F("fh2_EnergyCorrelationsAlvGamma", "Energies Alv GammaRange", 300, 0, 30000, 300,0,30000);
     fh2_EnergyCorrelationsAlvGamma->GetXaxis()->SetTitle("Energy Alv1");
@@ -396,40 +354,97 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     fh2_EnergyCorrelationsAlvGamma->GetXaxis()->CenterTitle(true);
     fh2_EnergyCorrelationsAlvGamma->GetYaxis()->CenterTitle(true);
     fh2_EnergyCorrelationsAlvGamma->Draw("COLZ");
-    hitfolCalifa->Add(fh2_EnergyCorrelationsAlvGamma);
-
-    mainfolCalifa->Add(hitfolCalifa);
-
-
-    fh1_EnergyTotBoxA_g = new TH1F("fh1_EnergyTotBoxA_g", "fh1_EnergyTotBoxA_g",3000,0,30000);
-    fh1_EnergyTotBoxA_g->Draw("col");
-    fh1_EnergyTotBoxA_p = new TH1F("fh1_EnergyTotBoxA_p", "fh1_EnergyTotBoxA_p",3000,0,300000);
-    fh1_EnergyTotBoxA_p->Draw("col");
-    fh1_EnergyTotBoxB_g = new TH1F("fh1_EnergyTotBoxB_g", "fh1_EnergyTotBoxB_g",3000,0,30000);
-    fh1_EnergyTotBoxB_g->Draw("col");
-    fh1_EnergyTotBoxB_p = new TH1F("fh1_EnergyTotBoxB_p", "fh1_EnergyTotBoxB_p",3000,0,300000);
-    fh1_EnergyTotBoxB_p->Draw("col");
-
-    calfolCalifa->Add(fh1_EnergyTotBoxA_g);
-    calfolCalifa->Add(fh1_EnergyTotBoxA_p);
-    calfolCalifa->Add(fh1_EnergyTotBoxB_g);
-    calfolCalifa->Add(fh1_EnergyTotBoxB_p);
 
     // Hit data Si
-    fh2_PosX_PosY.resize(fNbDet);
+    fh2_EnergyHitVsStrip.resize(fNbDet);
     for (Int_t i = 0; i < fNbDet; i++)
     { // one histo per detector
-        sprintf(Name1, "fh2_PosX_PosY");
-        sprintf(Name2, "fh2_PosX_PosY ");
-        fh2_PosX_PosY[i] = new TH2F(Name1, Name2, 34, 0, 34, 34, 0, 34);
-        fh2_PosX_PosY[i]->GetXaxis()->SetTitle("Strip X ");
-        fh2_PosX_PosY[i]->GetYaxis()->SetTitle("Strip Y ");
-        fh2_PosX_PosY[i]->GetYaxis()->SetTitleOffset(1.4);
-        fh2_PosX_PosY[i]->GetXaxis()->CenterTitle(true);
-        fh2_PosX_PosY[i]->GetYaxis()->CenterTitle(true);
-        fh2_PosX_PosY[i]->Draw("col");
-        mapfolSi->Add(fh2_PosX_PosY[i]);
+        sprintf(Name1, "fh2_energyHit_vs_strip_det_%d", i + 1);
+        sprintf(Name2, "Energy hit vs strip number for Si Det: %d", i + 1);
+        fh2_EnergyHitVsStrip[i] = new TH2F(Name1, Name2, 32, -30, 30, 32, -30, 30);
+        fh2_EnergyHitVsStrip[i]->GetXaxis()->SetTitle("Position X [mm]");
+        fh2_EnergyHitVsStrip[i]->GetYaxis()->SetTitle("Position Y [mm]");
+        fh2_EnergyHitVsStrip[i]->GetYaxis()->SetTitleOffset(1.4);
+        fh2_EnergyHitVsStrip[i]->GetXaxis()->CenterTitle(true);
+        fh2_EnergyHitVsStrip[i]->GetYaxis()->CenterTitle(true);
+        fh2_EnergyHitVsStrip[i]->Draw("col");
     }
+
+    cBoxEnergy = new TCanvas("BoxEnergy", "BoxEnergy", 10, 10, 500, 500);
+    cBoxEnergy->Divide(2,2);
+    fh1_EnergyBoxA_g = new TH1F("fh1_EnergyBoxA_g", "fh1_EnergyBoxA_g",3000,0,30000);
+    cBoxEnergy->cd(1);
+    fh1_EnergyBoxA_g->Draw("col");
+    fh1_EnergyBoxA_p = new TH1F("fh1_EnergyBoxA_p", "fh1_EnergyBoxA_p",3000,0,300000);
+    cBoxEnergy->cd(2);
+    fh1_EnergyBoxA_p->Draw("col");
+    fh1_EnergyBoxB_g = new TH1F("fh1_EnergyBoxB_g", "fh1_EnergyBoxB_g",3000,0,30000);
+    cBoxEnergy->cd(3);
+    fh1_EnergyBoxB_g->Draw("col");
+    fh1_EnergyBoxB_p = new TH1F("fh1_EnergyBoxB_p", "fh1_EnergyBoxB_p",3000,0,300000);
+    cBoxEnergy->cd(4);
+    fh1_EnergyBoxB_p->Draw("col");
+
+    // MAIN FOLDERs
+    TFolder* mainfolCalifa = new TFolder("Califa", "Califa info");
+
+    mainfolCalifa->Add(cEnergyCalCalifa_BoxA_p);
+    mainfolCalifa->Add(cEnergyCalCalifa_BoxA_g);
+    mainfolCalifa->Add(cEnergyCalCalifa_BoxB_p);
+    mainfolCalifa->Add(cEnergyCalCalifa_BoxB_g);
+    mainfolCalifa->Add(cBoxEnergy);
+
+    TFolder* mainfolSi = new TFolder("Si", "Si info");
+
+
+    // Folders for mapped data
+    TFolder* mapfolCalifa = new TFolder("Mapped", "Califa Mapped");
+    mapfolCalifa->Add(fh1_MultiplicityProton);
+    mapfolCalifa->Add(fh1_MultiplicityGamma);
+    for (Int_t i=0;i<fNbCrystals;i++)
+    {
+      mapfolCalifa->Add(fh1_EnergyCalifaCrystals[i]);
+    }
+    mainfolCalifa->Add(mapfolCalifa);
+
+    TFolder* mapfolSi = new TFolder("MappedSi", "Si Mapped");
+    for (Int_t i = 0; i < fNbDet; i++)
+    {
+      mapfolSi->Add(fh2_EnergyVsStrip[i]);
+    }
+    mainfolSi->Add(mapfolSi);
+
+    // Folders for cal data
+    TFolder* calfolCalifa = new TFolder("Cal", "Cal Califa info");
+    for (Int_t i=0;i<fNbCrystals;i++)
+    {
+      calfolCalifa->Add(fh1_EnergyCalCalifaCrystals[i]);
+    }
+    mainfolCalifa->Add(calfolCalifa);
+
+    TFolder* calfolSi = new TFolder("CalSi", "Cal Si info");
+    for (Int_t i = 0; i < fNbDet; i++)
+    {
+      calfolSi->Add(fh2_EnergyCalVsStrip[i]);
+    }
+    mainfolSi->Add(calfolSi);
+
+    // Folders for hit data and correlations
+    TFolder* hitfolCalifa = new TFolder("Correlations", "Hit Califa info");
+    hitfolCalifa->Add(fh2_EnergyCorrelationsAlvGamma);
+    hitfolCalifa->Add(fh2_EnergyCorrelationsAlvProton);
+    for (Int_t i=0;i<24;i++)
+    {
+      hitfolCalifa->Add(fh2_EnergyCorrelationsCrystals[i]);
+    }
+    mainfolCalifa->Add(hitfolCalifa);
+
+    TFolder* hitfolSi = new TFolder("HitSi", "Hit Si info");
+    for (Int_t i = 0; i < fNbDet; i++)
+    {
+      hitfolSi->Add(fh2_EnergyHitVsStrip[i]);
+    }
+
     mainfolSi->Add(hitfolSi);
 
     // Looking for FairRunOnline
@@ -444,20 +459,19 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
     return kSUCCESS;
 }
 
-void R3BCalifaJulichOnlineSpectra::Reset_CalifaJulich_Histo()
+void R3BCalifaJulichOnlineSpectraCANVASDEV::Reset_CalifaJulich_Histo()
 {
-    LOG(INFO) << "R3BCalifaJulichOnlineSpectra::Reset_CalifaJulich_Histo";
+    LOG(INFO) << "R3BCalifaJulichOnlineSpectraCANVASDEV::Reset_CalifaJulich_Histo";
 
     // Mapped data
     fh1_MultiplicityGamma->Reset();
     fh1_MultiplicityProton->Reset();
-    for (Int_t i=0;i<4;i++) {fh2_EnergyMapCalifa_SiStrip[i]->Reset(); fh2_PosX_PosY_Califa[i]->Reset();}
 
     for (Int_t i = 0; i < fNbDet; i++)
     {
         fh2_EnergyVsStrip[i]->Reset();
         fh2_EnergyCalVsStrip[i]->Reset();
-        fh2_PosX_PosY[i]->Reset();
+        fh2_EnergyHitVsStrip[i]->Reset();
     }
 
     for (Int_t i = 0; i < fNbCrystals; i++)
@@ -465,176 +479,25 @@ void R3BCalifaJulichOnlineSpectra::Reset_CalifaJulich_Histo()
         fh1_EnergyCalifaCrystals[i]->Reset();
         fh1_EnergyCalCalifaCrystals[i]->Reset();
         fh1_EnergyHitCalifaCrystals[i]->Reset();
-        fh2_Map_nf_ns[i]->Reset();
     }
 
     for (Int_t i=0;i<24;i++) { fh2_EnergyCorrelationsCrystals[i] -> Reset(); }
 }
 
-void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
+void R3BCalifaJulichOnlineSpectraCANVASDEV::Exec(Option_t* option)
 {
     // Fill mapped data
-
     if (fMappedItemsSi && fMappedItemsSi->GetEntriesFast() > 0)
     {
         auto nHits = fMappedItemsSi->GetEntriesFast();
-        // auto nHitsSi2 = fMappedItemsSi->GetEntriesFast();
-        // Float_t x=0.; Float_t y=0.;
-
         for (Int_t ihit = 0; ihit < nHits; ihit++)
         {
-            Int_t bin = 0;
             R3BAmsMappedData* hit = (R3BAmsMappedData*)fMappedItemsSi->At(ihit);
             if (!hit)
                 continue;
-
-
             fh2_EnergyVsStrip[hit->GetDetectorId()]->Fill(hit->GetStripId(), hit->GetEnergy());
-            //fh2_EnergyVsStrip[hit->GetDetectorId()]->Fill(bin, hit->GetEnergy());
-            // if (hit->GetStripId()<33)
-            // {
-            //   for (Int_t ihit2 = 0; ihit2 < nHitsSi2; ihit2++)
-            //   {
-            //     R3BAmsMappedData* hitSi2 = (R3BAmsMappedData*)fMappedItemsSi->At(ihit2);
-            //     if (!hitSi2)
-            //         continue;
-            //
-            //     if (hitSi2->GetStripId()>32)
-            //     {
-            //       x = hit->GetStripId(); y = hitSi2->GetStripId()-32;
-            //       fh2_PosX_PosY[hitSi2->GetDetectorId()]->Fill(x, y);
-            //     }
-            //   }
-            // }
         }
     }
-    if (fMappedItemsSi && fMappedItemsSi->GetEntriesFast() > 0 && fMappedItemsCalifa && fMappedItemsCalifa->GetEntriesFast() > 0)
-    {
-        auto nHitsSi = fMappedItemsSi->GetEntriesFast();
-        auto nHitsCalifa = fMappedItemsCalifa->GetEntriesFast();
-        auto nHitsSi2 = fMappedItemsSi->GetEntriesFast();
-        Float_t x=0.; Float_t y=0.;
-        Float_t energyTot = 0;
-
-        for (Int_t ihit = 0; ihit < nHitsSi; ihit++)
-        {
-          Int_t bin=100; Int_t bin2=100;
-            R3BAmsMappedData* hitSi = (R3BAmsMappedData*)fMappedItemsSi->At(ihit);
-            if (!hitSi || hitSi->GetEnergy()<100)
-                continue;
-
-            if (hitSi->GetStripId()==2)  {bin=7 ;}
-            if (hitSi->GetStripId()==3)  {bin=6 ;}
-            if (hitSi->GetStripId()==4)  {bin=5 ;}
-            if (hitSi->GetStripId()==5)  {bin=4 ;}
-            if (hitSi->GetStripId()==6)  {bin=3 ;}
-            if (hitSi->GetStripId()==7)  {bin=2;}
-            if (hitSi->GetStripId()==8)  {bin=9 ;}
-            if (hitSi->GetStripId()==9)  {bin=10;}
-            if (hitSi->GetStripId()==10) {bin=16;}
-            if (hitSi->GetStripId()==1)  {bin=8;}
-            if (hitSi->GetStripId()==11) {bin=15;}
-            if (hitSi->GetStripId()==12) {bin=14;}
-            if (hitSi->GetStripId()==13) {bin=13;}
-            if (hitSi->GetStripId()==14) {bin=12;}
-            if (hitSi->GetStripId()==15) {bin=11;}
-            if (hitSi->GetStripId()==16) {bin=1;}
-            if (hitSi->GetStripId()==17) {bin=32;}
-            if (hitSi->GetStripId()==18) {bin=22;}
-            if (hitSi->GetStripId()==19) {bin=21;}
-            if (hitSi->GetStripId()==20) {bin=20;}
-            if (hitSi->GetStripId()==21) {bin=19;}
-            if (hitSi->GetStripId()==22) {bin=18;}
-            if (hitSi->GetStripId()==32) {bin=25;}
-            if (hitSi->GetStripId()==23) {bin=17;}
-            if (hitSi->GetStripId()==24) {bin=23;}
-            if (hitSi->GetStripId()==25) {bin=24;}
-            if (hitSi->GetStripId()==26) {bin=31;}
-            if (hitSi->GetStripId()==27) {bin=30;}
-            if (hitSi->GetStripId()==28) {bin=29;}
-            if (hitSi->GetStripId()==29) {bin=28;}
-            if (hitSi->GetStripId()==30) {bin=27;}
-            if (hitSi->GetStripId()==31) {bin=26;}
-
-            for (Int_t ihitCal = 0; ihitCal < nHitsCalifa; ihitCal++)
-            {
-              R3BCalifaMappedData* hit = (R3BCalifaMappedData*)fMappedItemsCalifa->At(ihitCal);
-              if (!hit || hit->GetEnergy()<5000)
-                  continue;
-              Int_t index=1000;
-              if (hit->GetCrystalId()==324) {index=3;}
-              if (hit->GetCrystalId()==325) {index=2;}
-              if (hit->GetCrystalId()==326) {index=1;}
-              if (hit->GetCrystalId()==327) {index=0;}
-
-              if (hit->GetCrystalId()==324 || hit->GetCrystalId()==325 || hit->GetCrystalId()==326 || hit->GetCrystalId()==327 )
-              {
-                energyTot =+ hit->GetEnergy();
-              }
-              if(index==1000) {return;}
-
-              fh2_EnergyMapCalifa_SiStrip[index]->Fill(hitSi->GetStripId(),hit->GetEnergy());
-              fh2_EnergyTotMapCalifa_SiStrip->Fill(hitSi->GetStripId(), energyTot);
-
-              if (bin<100)
-              {
-                for (Int_t ihit2 = 0; ihit2 < nHitsSi2; ihit2++)
-                {
-                  R3BAmsMappedData* hitSi2 = (R3BAmsMappedData*)fMappedItemsSi->At(ihit2);
-                  if (!hitSi2)
-                      continue;
-
-                  if (hitSi2->GetStripId()==2 +32) {bin2=7 ;}
-                  if (hitSi2->GetStripId()==3 +32) {bin2=6 ;}
-                  if (hitSi2->GetStripId()==4 +32) {bin2=5 ;}
-                  if (hitSi2->GetStripId()==5 +32) {bin2=4 ;}
-                  if (hitSi2->GetStripId()==6 +32) {bin2=3 ;}
-                  if (hitSi2->GetStripId()==7 +32) {bin2=2 ;}
-                  if (hitSi2->GetStripId()==8 +32) {bin2=9 ;}
-                  if (hitSi2->GetStripId()==9 +32) {bin2=10;}
-                  if (hitSi2->GetStripId()==10+32) {bin2=16;}
-                  if (hitSi2->GetStripId()==1 +32) {bin2=8 ;}
-                  if (hitSi2->GetStripId()==11+32) {bin2=15;}
-                  if (hitSi2->GetStripId()==12+32) {bin2=14;}
-                  if (hitSi2->GetStripId()==13+32) {bin2=13;}
-                  if (hitSi2->GetStripId()==14+32) {bin2=12;}
-                  if (hitSi2->GetStripId()==15+32) {bin2=11;}
-                  if (hitSi2->GetStripId()==16+32) {bin2=1 ;}
-                  if (hitSi2->GetStripId()==17+32) {bin2=32;}
-                  if (hitSi2->GetStripId()==18+32) {bin2=22;}
-                  if (hitSi2->GetStripId()==19+32) {bin2=21;}
-                  if (hitSi2->GetStripId()==20+32) {bin2=20;}
-                  if (hitSi2->GetStripId()==21+32) {bin2=19;}
-                  if (hitSi2->GetStripId()==22+32) {bin2=18;}
-                  if (hitSi2->GetStripId()==32+32) {bin2=25;}
-                  if (hitSi2->GetStripId()==23+32) {bin2=17;}
-                  if (hitSi2->GetStripId()==24+32) {bin2=23;}
-                  if (hitSi2->GetStripId()==25+32) {bin2=24;}
-                  if (hitSi2->GetStripId()==26+32) {bin2=31;}
-                  if (hitSi2->GetStripId()==27+32) {bin2=30;}
-                  if (hitSi2->GetStripId()==28+32) {bin2=29;}
-                  if (hitSi2->GetStripId()==29+32) {bin2=28;}
-                  if (hitSi2->GetStripId()==30+32) {bin2=27;}
-                  if (hitSi2->GetStripId()==31+32) {bin2=26;}
-
-                  if (bin2<100)
-                  {
-
-                    x = bin; y = bin2;
-
-                    fh2_PosX_PosY[hitSi2->GetDetectorId()]->Fill(x, y);
-
-                    if (hit->GetCrystalId()==327) {fh2_PosX_PosY_Califa[0]->Fill(x,y);}
-                    if (hit->GetCrystalId()==326) {fh2_PosX_PosY_Califa[1]->Fill(x,y);}
-                    if (hit->GetCrystalId()==325) {fh2_PosX_PosY_Califa[2]->Fill(x,y);}
-                    if (hit->GetCrystalId()==324) {fh2_PosX_PosY_Califa[3]->Fill(x,y);}
-                  }
-                }
-              }
-            }
-        }
-    }
-
 
     if (fMappedItemsCalifa && fMappedItemsCalifa->GetEntriesFast() > 0)
     {
@@ -646,7 +509,6 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
             if (!hit)
                 continue;
             Int_t index=1000;
-
             if (hit->GetCrystalId()==324) {index=3;}
             if (hit->GetCrystalId()==325) {index=2;}
             if (hit->GetCrystalId()==326) {index=1;}
@@ -672,11 +534,23 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
             else {multGamma++;}
 
             fh1_EnergyCalifaCrystals[index]->Fill(hit->GetEnergy());
-            fh2_Map_nf_ns[index]->Fill(hit->GetNf(),hit->GetNs());
         }
 
         fh1_MultiplicityGamma->Fill(multGamma);
-        fh1_MultiplicityProton->Fill(multProton);
+        fh1_MultiplicityProton->Fill(multGamma);
+    }
+
+    //Fill Cal data
+    if (fCalItemsSi && fCalItemsSi->GetEntriesFast() > 0)
+    {
+        auto nHits = fCalItemsSi->GetEntriesFast();
+        for (Int_t ihit = 0; ihit < nHits; ihit++)
+        {
+            R3BAmsStripCalData* hit = (R3BAmsStripCalData*)fCalItemsSi->At(ihit);
+            if (!hit)
+                continue;
+            fh2_EnergyCalVsStrip[hit->GetDetId()]->Fill(hit->GetStripId()+32*hit->GetSideId(), hit->GetEnergy());
+        }
     }
 
     if (fCalItemsCalifa && fCalItemsCalifa->GetEntriesFast() > 0)
@@ -718,8 +592,10 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
 
             fh1_EnergyCalCalifaCrystals[index]->Fill(hit->GetEnergy());
             crystals[index]=1;
+
             energies[index]=hit->GetEnergy();
         }
+
 
         for (Int_t i=0;i<4;i++)
         {
@@ -770,13 +646,14 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
           fh2_EnergyCorrelationsCrystals[5]->GetYaxis()->SetTitle("Energy [keV] crystal 4");
         }
 
-        //BoxA GammaRange
-        if (crystals[4] && crystals[5])
-          {
-            fh2_EnergyCorrelationsCrystals[6]->Fill(energies[4],energies[5]);
-            fh2_EnergyCorrelationsCrystals[6]->GetXaxis()->SetTitle("Energy [keV] crystal 5");
-            fh2_EnergyCorrelationsCrystals[6]->GetYaxis()->SetTitle("Energy [keV] crystal 6");
-          }
+//BoxA GammaRange
+
+      if (crystals[4] && crystals[5])
+        {
+          fh2_EnergyCorrelationsCrystals[6]->Fill(energies[4],energies[5]);
+          fh2_EnergyCorrelationsCrystals[6]->GetXaxis()->SetTitle("Energy [keV] crystal 5");
+          fh2_EnergyCorrelationsCrystals[6]->GetYaxis()->SetTitle("Energy [keV] crystal 6");
+        }
 
         if (crystals[4] && crystals[6])
         {
@@ -812,7 +689,7 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
           fh2_EnergyCorrelationsCrystals[11]->GetYaxis()->SetTitle("Energy [keV] crystal 7");
         }
 
-        //BoxB ProtonRange
+//BoxB ProtonRange
         if (crystals[8] && crystals[9])
         {
           fh2_EnergyCorrelationsCrystals[12]->Fill(energies[8],energies[9]);
@@ -855,7 +732,8 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
           fh2_EnergyCorrelationsCrystals[17]->GetYaxis()->SetTitle("Energy [keV] crystal 4");
         }
 
-        //BoxB GammaRange
+//BoxB GammaRange
+
         if (crystals[12] && crystals[13])
         {
           fh2_EnergyCorrelationsCrystals[18]->Fill(energies[12],energies[13]);
@@ -900,31 +778,32 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
       fh2_EnergyCorrelationsAlvProton->Fill(energy_alv[0],energy_alv[2]);
       fh2_EnergyCorrelationsAlvGamma->Fill(energy_alv[1],energy_alv[3]);
 
-      fh1_EnergyTotBoxA_p->Fill(energy_alv[0]);
-      fh1_EnergyTotBoxA_g->Fill(energy_alv[1]);
-      fh1_EnergyTotBoxB_p->Fill(energy_alv[2]);
-      fh1_EnergyTotBoxB_g->Fill(energy_alv[3]);
+
+      cBoxEnergy->cd(1); fh1_EnergyBoxA_p->Fill(energy_alv[0]);
+      cBoxEnergy->cd(2); fh1_EnergyBoxA_g->Fill(energy_alv[1]);
+      cBoxEnergy->cd(3); fh1_EnergyBoxB_p->Fill(energy_alv[2]);
+      cBoxEnergy->cd(4); fh1_EnergyBoxB_g->Fill(energy_alv[3]);
 
     }
 
     // Fill Hit data Si
-    // if (fHitItemsSi && fHitItemsSi->GetEntriesFast() > 0)
-    // {
-    //     auto nHits = fHitItemsSi->GetEntriesFast();
-    //     for (Int_t ihit = 0; ihit < nHits; ihit++)
-    //     {
-    //         R3BAmsHitData* hit = (R3BAmsHitData*)fHitItemsSi->At(ihit);
-    //         if (!hit)
-    //             continue;
-    //         fh2_PosX_PosY[hit->GetDetId()]->Fill(hit->GetPosLab().X(), hit->GetPosLab().Y());
-    //     }
-    // }
+    if (fHitItemsSi && fHitItemsSi->GetEntriesFast() > 0)
+    {
+        auto nHits = fHitItemsSi->GetEntriesFast();
+        for (Int_t ihit = 0; ihit < nHits; ihit++)
+        {
+            R3BAmsHitData* hit = (R3BAmsHitData*)fHitItemsSi->At(ihit);
+            if (!hit)
+                continue;
+            fh2_EnergyHitVsStrip[hit->GetDetId()]->Fill(hit->GetPosLab().X(), hit->GetPosLab().Y());
+        }
+    }
 
 
     fNEvents += 1;
 }
 
-void R3BCalifaJulichOnlineSpectra::FinishEvent()
+void R3BCalifaJulichOnlineSpectraCANVASDEV::FinishEvent()
 {
     if (fMappedItemsSi)
       {fMappedItemsSi->Clear();}
@@ -945,26 +824,21 @@ void R3BCalifaJulichOnlineSpectra::FinishEvent()
       {fHitItemsSi->Clear();}
 }
 
-void R3BCalifaJulichOnlineSpectra::FinishTask()
+void R3BCalifaJulichOnlineSpectraCANVASDEV::FinishTask()
 {
 
    for (Int_t i = 0; i < fNbDet; i++)
       {
           if (fMappedItemsSi) { fh2_EnergyVsStrip[i]->Write(); }
           if (fCalItemsSi) { fh2_EnergyCalVsStrip[i]->Write(); }
-          if (fHitItemsSi) { fh2_PosX_PosY[i]->Write(); }
+          if (fHitItemsSi) { fh2_EnergyHitVsStrip[i]->Write(); }
       }
 
       if(fMappedItemsCalifa) fh1_MultiplicityGamma->Write();
 
-      if(fMappedItemsCalifa && fMappedItemsSi)
-      {
-        for (Int_t i=0;i<4;i++) {fh2_EnergyMapCalifa_SiStrip[i]->Write(); fh2_PosX_PosY_Califa[i]->Write();}
-        fh2_EnergyTotMapCalifa_SiStrip->Write();
-      }
       for (Int_t i = 0; i < fNbCrystals; i++)
       {
-          if (fMappedItemsCalifa){ fh1_EnergyCalifaCrystals[i]->Write(); fh2_Map_nf_ns[i]->Write();}
+          if (fMappedItemsCalifa){ fh1_EnergyCalifaCrystals[i]->Write(); }
           if (fCalItemsCalifa){ fh1_EnergyCalCalifaCrystals[i]->Write(); }
           if (fHitItemsCalifa){ fh1_EnergyHitCalifaCrystals[i]->Write(); }
       }
@@ -980,11 +854,16 @@ void R3BCalifaJulichOnlineSpectra::FinishTask()
       fh2_EnergyCorrelationsAlvProton->Write();
       fh2_EnergyCorrelationsAlvGamma->Write();
 
-      fh1_EnergyTotBoxA_p->Write();
-      fh1_EnergyTotBoxA_g->Write();
-      fh1_EnergyTotBoxB_p->Write();
-      fh1_EnergyTotBoxB_g->Write();
+      cBoxEnergy->Write();
+      fh1_EnergyBoxA_p->Write();
+      fh1_EnergyBoxA_g->Write();
+      fh1_EnergyBoxB_p->Write();
+      fh1_EnergyBoxB_g->Write();
 
+      cEnergyCalCalifa_BoxA_p->Write();
+      cEnergyCalCalifa_BoxA_g->Write();
+      cEnergyCalCalifa_BoxB_p->Write();
+      cEnergyCalCalifa_BoxB_g->Write();
 }
 
-ClassImp(R3BCalifaJulichOnlineSpectra);
+ClassImp(R3BCalifaJulichOnlineSpectraCANVASDEV);

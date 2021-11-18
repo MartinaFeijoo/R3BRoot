@@ -114,28 +114,31 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
     Int_t fNbDet;           // Number of AMS detectors.
     Int_t fNbCrystals;           // Number of AMS detectors.
 
+
+    //Canvas
+    TCanvas *cBoxEnergy;
+    TCanvas *cSilicon;
+    TCanvas *cEnergyCalCalifa_BoxA_p;
+    TCanvas *cEnergyCalCalifa_BoxA_g;
+    TCanvas *cEnergyCalCalifa_BoxB_p;
+    TCanvas *cEnergyCalCalifa_BoxB_g;
+
     // Histograms for map data
     std::vector<TH2F*> fh2_EnergyVsStrip;
     std::vector<TH2F*> fh2_EnergyCalVsStrip;
-    std::vector<TH2F*> fh2_PosX_PosY;
+    std::vector<TH2F*> fh2_EnergyHitVsStrip;
     std::vector<TH1F*> fh1_EnergyCalifaCrystals;
     std::vector<TH1F*> fh1_EnergyCalCalifaCrystals;
     std::vector<TH1F*> fh1_EnergyHitCalifaCrystals;
     std::vector<TH2F*> fh2_EnergyCorrelationsCrystals;
-    std::vector<TH2F*> fh2_Map_nf_ns;
-
     TH2F *fh2_EnergyCorrelationsAlvProton;
     TH1F *fh1_MultiplicityGamma;
     TH1F *fh1_MultiplicityProton;
     TH2F *fh2_EnergyCorrelationsAlvGamma;
-    TH1F *fh1_EnergyTotBoxA_g;
-    TH1F *fh1_EnergyTotBoxB_g;
-    TH1F *fh1_EnergyTotBoxA_p;
-    TH1F *fh1_EnergyTotBoxB_p;
-
-    TH2F *fh2_EnergyMapCalifa_SiStrip[4];
-    TH2F *fh2_EnergyTotMapCalifa_SiStrip;
-    TH2F *fh2_PosX_PosY_Califa[4];
+    TH1F *fh1_EnergyBoxA_g;
+    TH1F *fh1_EnergyBoxB_g;
+    TH1F *fh1_EnergyBoxA_p;
+    TH1F *fh1_EnergyBoxB_p;
 
   public:
     ClassDefOverride(R3BCalifaJulichOnlineSpectra, 0)

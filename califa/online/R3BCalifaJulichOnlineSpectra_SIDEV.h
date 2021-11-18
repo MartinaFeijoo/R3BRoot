@@ -12,13 +12,13 @@
  ******************************************************************************/
 
 // ------------------------------------------------------------
-// -----             R3BCalifaJulichOnlineSpectra                 -----
+// -----             R3BCalifaJulichOnlineSpectra_SIDEV                 -----
 // -----    Created 16/07/21  by J.L. Rodriguez-Sanchez   -----
 // -----          Fill CalifaJulich online histograms             -----
 // ------------------------------------------------------------
 
-#ifndef R3BCalifaJulichOnlineSpectra_H
-#define R3BCalifaJulichOnlineSpectra_H
+#ifndef R3BCalifaJulichOnlineSpectra_SIDEV_H
+#define R3BCalifaJulichOnlineSpectra_SIDEV_H
 
 #include "FairTask.h"
 
@@ -40,7 +40,7 @@ class TH2F;
 /**
  * This taks reads CalifaJulich data and plots online histograms
  */
-class R3BCalifaJulichOnlineSpectra : public FairTask
+class R3BCalifaJulichOnlineSpectra_SIDEV : public FairTask
 {
 
   public:
@@ -48,7 +48,7 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
      * Default constructor.
      * Creates an instance of the task with default parameters.
      */
-    R3BCalifaJulichOnlineSpectra();
+    R3BCalifaJulichOnlineSpectra_SIDEV();
 
     /**
      * Standard constructor.
@@ -56,13 +56,13 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
      * @param name a name of the task.
      * @param iVerbose a verbosity level.
      */
-    R3BCalifaJulichOnlineSpectra(const TString& name, Int_t iVerbose = 1);
+    R3BCalifaJulichOnlineSpectra_SIDEV(const TString& name, Int_t iVerbose = 1);
 
     /**
      * Destructor.
      * Frees the memory used by the object.
      */
-    virtual ~R3BCalifaJulichOnlineSpectra();
+    virtual ~R3BCalifaJulichOnlineSpectra_SIDEV();
 
     /**
      * Method for task initialization.
@@ -117,13 +117,12 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
     // Histograms for map data
     std::vector<TH2F*> fh2_EnergyVsStrip;
     std::vector<TH2F*> fh2_EnergyCalVsStrip;
-    std::vector<TH2F*> fh2_PosX_PosY;
+    std::vector<TH2F*> fh2_EnergyHitVsStrip;
     std::vector<TH1F*> fh1_EnergyCalifaCrystals;
     std::vector<TH1F*> fh1_EnergyCalCalifaCrystals;
     std::vector<TH1F*> fh1_EnergyHitCalifaCrystals;
     std::vector<TH2F*> fh2_EnergyCorrelationsCrystals;
     std::vector<TH2F*> fh2_Map_nf_ns;
-
     TH2F *fh2_EnergyCorrelationsAlvProton;
     TH1F *fh1_MultiplicityGamma;
     TH1F *fh1_MultiplicityProton;
@@ -133,12 +132,9 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
     TH1F *fh1_EnergyTotBoxA_p;
     TH1F *fh1_EnergyTotBoxB_p;
 
-    TH2F *fh2_EnergyMapCalifa_SiStrip[4];
-    TH2F *fh2_EnergyTotMapCalifa_SiStrip;
-    TH2F *fh2_PosX_PosY_Califa[4];
 
   public:
-    ClassDefOverride(R3BCalifaJulichOnlineSpectra, 0)
+    ClassDefOverride(R3BCalifaJulichOnlineSpectra_SIDEV, 0)
 };
 
-#endif /* R3BCalifaJulichOnlineSpectra_H */
+#endif /* R3BCalifaJulichOnlineSpectra_SIDEV_H */

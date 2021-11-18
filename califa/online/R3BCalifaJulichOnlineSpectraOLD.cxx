@@ -249,7 +249,7 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
 
       sprintf(Name3, "fh2_PosX_PosY_crystal_%d", 4-i);
       sprintf(Name4, "fh2_PosX_PosY crystal %d", 4-i);
-      fh2_PosX_PosY_Califa[i] = new TH2F(Name3, Name4, 34, 0, 34, 34, 0, 34);
+      fh2_PosX_PosY_Califa[i] = new TH2F(Name3, Name4, 33, 0, 33, 33, 0, 33);
       fh2_PosX_PosY_Califa[i]->GetXaxis()->SetTitle("Strip x");
       fh2_PosX_PosY_Califa[i]->GetYaxis()->SetTitle("Strip Y");
       fh2_PosX_PosY_Califa[i]->GetYaxis()->SetTitleOffset(1.4);
@@ -281,7 +281,7 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
         fh2_EnergyCalVsStrip[i]->GetXaxis()->CenterTitle(true);
         fh2_EnergyCalVsStrip[i]->GetYaxis()->CenterTitle(true);
         fh2_EnergyCalVsStrip[i]->Draw("col");
-        mapfolSi->Add(fh2_EnergyCalVsStrip[i]);
+        calfolSi->Add(fh2_EnergyCalVsStrip[i]);
     }
     mainfolSi->Add(calfolSi);
 
@@ -428,7 +428,7 @@ InitStatus R3BCalifaJulichOnlineSpectra::Init()
         fh2_PosX_PosY[i]->GetXaxis()->CenterTitle(true);
         fh2_PosX_PosY[i]->GetYaxis()->CenterTitle(true);
         fh2_PosX_PosY[i]->Draw("col");
-        mapfolSi->Add(fh2_PosX_PosY[i]);
+        hitfolSi->Add(fh2_PosX_PosY[i]);
     }
     mainfolSi->Add(hitfolSi);
 
@@ -483,14 +483,11 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
 
         for (Int_t ihit = 0; ihit < nHits; ihit++)
         {
-            Int_t bin = 0;
             R3BAmsMappedData* hit = (R3BAmsMappedData*)fMappedItemsSi->At(ihit);
             if (!hit)
                 continue;
-
-
             fh2_EnergyVsStrip[hit->GetDetectorId()]->Fill(hit->GetStripId(), hit->GetEnergy());
-            //fh2_EnergyVsStrip[hit->GetDetectorId()]->Fill(bin, hit->GetEnergy());
+
             // if (hit->GetStripId()<33)
             // {
             //   for (Int_t ihit2 = 0; ihit2 < nHitsSi2; ihit2++)
@@ -518,48 +515,14 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
 
         for (Int_t ihit = 0; ihit < nHitsSi; ihit++)
         {
-          Int_t bin=100; Int_t bin2=100;
             R3BAmsMappedData* hitSi = (R3BAmsMappedData*)fMappedItemsSi->At(ihit);
-            if (!hitSi || hitSi->GetEnergy()<100)
+            if (!hitSi)
                 continue;
-
-            if (hitSi->GetStripId()==2)  {bin=7 ;}
-            if (hitSi->GetStripId()==3)  {bin=6 ;}
-            if (hitSi->GetStripId()==4)  {bin=5 ;}
-            if (hitSi->GetStripId()==5)  {bin=4 ;}
-            if (hitSi->GetStripId()==6)  {bin=3 ;}
-            if (hitSi->GetStripId()==7)  {bin=2;}
-            if (hitSi->GetStripId()==8)  {bin=9 ;}
-            if (hitSi->GetStripId()==9)  {bin=10;}
-            if (hitSi->GetStripId()==10) {bin=16;}
-            if (hitSi->GetStripId()==1)  {bin=8;}
-            if (hitSi->GetStripId()==11) {bin=15;}
-            if (hitSi->GetStripId()==12) {bin=14;}
-            if (hitSi->GetStripId()==13) {bin=13;}
-            if (hitSi->GetStripId()==14) {bin=12;}
-            if (hitSi->GetStripId()==15) {bin=11;}
-            if (hitSi->GetStripId()==16) {bin=1;}
-            if (hitSi->GetStripId()==17) {bin=32;}
-            if (hitSi->GetStripId()==18) {bin=22;}
-            if (hitSi->GetStripId()==19) {bin=21;}
-            if (hitSi->GetStripId()==20) {bin=20;}
-            if (hitSi->GetStripId()==21) {bin=19;}
-            if (hitSi->GetStripId()==22) {bin=18;}
-            if (hitSi->GetStripId()==32) {bin=25;}
-            if (hitSi->GetStripId()==23) {bin=17;}
-            if (hitSi->GetStripId()==24) {bin=23;}
-            if (hitSi->GetStripId()==25) {bin=24;}
-            if (hitSi->GetStripId()==26) {bin=31;}
-            if (hitSi->GetStripId()==27) {bin=30;}
-            if (hitSi->GetStripId()==28) {bin=29;}
-            if (hitSi->GetStripId()==29) {bin=28;}
-            if (hitSi->GetStripId()==30) {bin=27;}
-            if (hitSi->GetStripId()==31) {bin=26;}
 
             for (Int_t ihitCal = 0; ihitCal < nHitsCalifa; ihitCal++)
             {
               R3BCalifaMappedData* hit = (R3BCalifaMappedData*)fMappedItemsCalifa->At(ihitCal);
-              if (!hit || hit->GetEnergy()<5000)
+              if (!hit)
                   continue;
               Int_t index=1000;
               if (hit->GetCrystalId()==324) {index=3;}
@@ -576,7 +539,7 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
               fh2_EnergyMapCalifa_SiStrip[index]->Fill(hitSi->GetStripId(),hit->GetEnergy());
               fh2_EnergyTotMapCalifa_SiStrip->Fill(hitSi->GetStripId(), energyTot);
 
-              if (bin<100)
+              if (hitSi->GetStripId()<33)
               {
                 for (Int_t ihit2 = 0; ihit2 < nHitsSi2; ihit2++)
                 {
@@ -584,46 +547,10 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
                   if (!hitSi2)
                       continue;
 
-                  if (hitSi2->GetStripId()==2 +32) {bin2=7 ;}
-                  if (hitSi2->GetStripId()==3 +32) {bin2=6 ;}
-                  if (hitSi2->GetStripId()==4 +32) {bin2=5 ;}
-                  if (hitSi2->GetStripId()==5 +32) {bin2=4 ;}
-                  if (hitSi2->GetStripId()==6 +32) {bin2=3 ;}
-                  if (hitSi2->GetStripId()==7 +32) {bin2=2 ;}
-                  if (hitSi2->GetStripId()==8 +32) {bin2=9 ;}
-                  if (hitSi2->GetStripId()==9 +32) {bin2=10;}
-                  if (hitSi2->GetStripId()==10+32) {bin2=16;}
-                  if (hitSi2->GetStripId()==1 +32) {bin2=8 ;}
-                  if (hitSi2->GetStripId()==11+32) {bin2=15;}
-                  if (hitSi2->GetStripId()==12+32) {bin2=14;}
-                  if (hitSi2->GetStripId()==13+32) {bin2=13;}
-                  if (hitSi2->GetStripId()==14+32) {bin2=12;}
-                  if (hitSi2->GetStripId()==15+32) {bin2=11;}
-                  if (hitSi2->GetStripId()==16+32) {bin2=1 ;}
-                  if (hitSi2->GetStripId()==17+32) {bin2=32;}
-                  if (hitSi2->GetStripId()==18+32) {bin2=22;}
-                  if (hitSi2->GetStripId()==19+32) {bin2=21;}
-                  if (hitSi2->GetStripId()==20+32) {bin2=20;}
-                  if (hitSi2->GetStripId()==21+32) {bin2=19;}
-                  if (hitSi2->GetStripId()==22+32) {bin2=18;}
-                  if (hitSi2->GetStripId()==32+32) {bin2=25;}
-                  if (hitSi2->GetStripId()==23+32) {bin2=17;}
-                  if (hitSi2->GetStripId()==24+32) {bin2=23;}
-                  if (hitSi2->GetStripId()==25+32) {bin2=24;}
-                  if (hitSi2->GetStripId()==26+32) {bin2=31;}
-                  if (hitSi2->GetStripId()==27+32) {bin2=30;}
-                  if (hitSi2->GetStripId()==28+32) {bin2=29;}
-                  if (hitSi2->GetStripId()==29+32) {bin2=28;}
-                  if (hitSi2->GetStripId()==30+32) {bin2=27;}
-                  if (hitSi2->GetStripId()==31+32) {bin2=26;}
-
-                  if (bin2<100)
+                  if (hitSi2->GetStripId()>32)
                   {
-
-                    x = bin; y = bin2;
-
+                    x = hitSi->GetStripId(); y = hitSi2->GetStripId()-32;
                     fh2_PosX_PosY[hitSi2->GetDetectorId()]->Fill(x, y);
-
                     if (hit->GetCrystalId()==327) {fh2_PosX_PosY_Califa[0]->Fill(x,y);}
                     if (hit->GetCrystalId()==326) {fh2_PosX_PosY_Califa[1]->Fill(x,y);}
                     if (hit->GetCrystalId()==325) {fh2_PosX_PosY_Califa[2]->Fill(x,y);}
@@ -676,8 +603,21 @@ void R3BCalifaJulichOnlineSpectra::Exec(Option_t* option)
         }
 
         fh1_MultiplicityGamma->Fill(multGamma);
-        fh1_MultiplicityProton->Fill(multProton);
+        fh1_MultiplicityProton->Fill(multGamma);
     }
+
+    //Fill Cal data
+    // if (fCalItemsSi && fCalItemsSi->GetEntriesFast() > 0)
+    // {
+    //     auto nHits = fCalItemsSi->GetEntriesFast();
+    //     for (Int_t ihit = 0; ihit < nHits; ihit++)
+    //     {
+    //         R3BAmsStripCalData* hit = (R3BAmsStripCalData*)fCalItemsSi->At(ihit);
+    //         if (!hit)
+    //             continue;
+    //         fh2_EnergyCalVsStrip[hit->GetDetId()]->Fill(hit->GetStripId()+32*hit->GetSideId(), hit->GetEnergy());
+    //     }
+    // }
 
     if (fCalItemsCalifa && fCalItemsCalifa->GetEntriesFast() > 0)
     {

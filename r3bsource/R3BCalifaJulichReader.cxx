@@ -94,13 +94,12 @@ Bool_t R3BCalifaJulichReader::Read()
         int16_t tot = 0;//fData->CALIFA_TOTv[crystal];
 
 
-//std::cout << channelNumber << ", " << energy << ", " << nf << ", " << ns << ", " << febextime << ", " << wrts << ", " << ov << ", " << pu << ", " << dc << ", " << tot << std::endl;
-        //if (channelNumber < 100)
+        if (channelNumber < 384)
         new ((*fArrayCalifa)[fArrayCalifa->GetEntriesFast()])R3BCalifaMappedData(channelNumber, energy, nf, ns, febextime, wrts, ov, pu, dc, tot);
 
-        //else if (channelNumber < 600)
-        //new ((*fArrayAms)[fArrayAms->GetEntriesFast()])
-        //    R3BAmsMappedData(0,channelNumber, energy);
+        else if (channelNumber < 448)
+        new ((*fArrayAms)[fArrayAms->GetEntriesFast()])
+            R3BAmsMappedData(0,channelNumber-384, energy);
 
     }
     fNEvent += 1;
