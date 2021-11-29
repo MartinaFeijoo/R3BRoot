@@ -96,6 +96,8 @@ void R3BMusicCal2Hit::SetParameter()
 {
     //--- Parameter Container ---
     fNumAnodes = fCal_Par->GetNumAnodes(); // Number of anodes
+    fmusicHitp0 = fCal_Par->Getp0();
+    fmusicHitp1 = fCal_Par->Getp1();
 
     // Anodes that don't work set to zero
     for (Int_t i = 0; i < fNumAnodes; i++)
@@ -237,7 +239,9 @@ void R3BMusicCal2Hit::Exec(Option_t* option)
         Double_t zhit = fZ0 + fZ1 * TMath::Sqrt(Esum / nba) + fZ2 * TMath::Sqrt(Esum / nba) * TMath::Sqrt(Esum / nba);
         if (zhit > 0)
             // AddHitData(theta, zhit);
-            AddHitData(theta, zhit, Esum / nba);
+            //AddHitData(theta, zhit, Esum / nba);
+            AddHitData(theta, zhit*fmusicHitp1+fmusicHitp0+1, Esum / nba);
+
     }
     if (CalDat)
         delete CalDat;

@@ -136,6 +136,7 @@ class R3BCalifaJulichOnlineSpectra : public FairTask
     TH2F *fh2_EnergyMapCalifa_SiStrip[4];
     TH2F *fh2_EnergyTotMapCalifa_SiStrip;
     TH2F *fh2_PosX_PosY_Califa[4];
+    TH2F *fh2_Energy_1A_1B;
 
   public:
     ClassDefOverride(R3BCalifaJulichOnlineSpectra, 0)

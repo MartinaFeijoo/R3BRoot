@@ -77,6 +77,9 @@ void R3BMusicHitPar::putParams(FairParamList* list)
     list->add("musicZHitParamsFitPar", fNumParamsZFit);
     fDetZHitParams->Set(fNumParamsZFit);
     list->add("musicZHitPar", *fDetZHitParams);
+
+    list->add("musicHitp0", musicHitp0);
+    list->add("musicHitp1", musicHitp1);
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -121,6 +124,18 @@ Bool_t R3BMusicHitPar::getParams(FairParamList* list)
     if (!(list->fill("musicZHitPar", fDetZHitParams)))
     {
         LOG(ERROR) << "Could not initialize musicZHitPar";
+        return kFALSE;
+    }
+
+    if (!(list->fill("musicHitp0", &musicHitp0)))
+    {
+        LOG(INFO) << "---Could not initialize MusicHit p0 Par";
+        return kFALSE;
+    }
+
+    if (!(list->fill("musicHitp1", &musicHitp1)))
+    {
+        LOG(INFO) << "---Could not initialize MusicHit p1 Par";
         return kFALSE;
     }
 
