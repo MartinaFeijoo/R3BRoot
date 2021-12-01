@@ -67,6 +67,7 @@ class R3BMusicCal2Hit : public FairTask
     Int_t fNumAnodesAngleFit;
     Int_t fNumParams;
     Float_t fZ0, fZ1, fZ2;
+    Float_t fmusicHitp0, fmusicHitp1;
     TArrayF* CalZParams;
     Int_t fStatusAnodes[8]; // Status anodes
     Double_t fPosAnodes[8]; // Position-Z of each anode

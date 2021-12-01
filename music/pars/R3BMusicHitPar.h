@@ -59,6 +59,8 @@ class R3BMusicHitPar : public FairParGenericSet
     const Int_t GetInUse(Int_t anode) { return fIn_use->GetAt(anode - 1); }
     const Float_t GetAnodePos(Int_t anode) { return fAnode_pos->GetAt(anode - 1); }
     TArrayF* GetZHitPar() { return fDetZHitParams; }
+    const Float_t Getp0() { return musicHitp0; }
+    const Float_t Getp1() { return musicHitp1; }
 
     void SetNumParZFit(Int_t nbParams) { fNumParamsZFit = nbParams; }
     void SetNumAnodes(Int_t nbAnodes) { fNumAnodes = nbAnodes; }
@@ -74,6 +76,7 @@ class R3BMusicHitPar : public FairParGenericSet
     TArrayF* fAnode_pos;     // Position of each anode along the beam direction
     Int_t fNumAnodes;        // Number of anodes
     Int_t fNumParamsZFit;    // number of hit parameters in the fit for charge Z
+    Float_t musicHitp0, musicHitp1;
 
     const R3BMusicHitPar& operator=(const R3BMusicHitPar&); /*< an assignment operator>*/
 
