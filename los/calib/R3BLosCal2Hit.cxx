@@ -23,6 +23,7 @@
 #include "R3BEventHeader.h"
 #include "R3BLosCalData.h"
 #include "R3BLosHitData.h"
+#include "R3BLosHitPar.h"
 #include "R3BLosMapped2Cal.h"
 #include "R3BLosMappedData.h"
 #include "R3BTCalEngine.h"
@@ -43,7 +44,11 @@ using namespace std;
 #define IS_NAN(x) TMath::IsNaN(x)
 
 R3BLosCal2Hit::R3BLosCal2Hit()
+<<<<<<< HEAD:los/calib/R3BLosCal2Hit.cxx
     : R3BLosCal2Hit("LosCal2Hit",1)
+=======
+    : R3BLosCal2Hit("LosCal2Hit", 1)
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:los/calib/R3BLosCal2Hit.cxx
 {
 }
 
@@ -268,6 +273,7 @@ R3BLosCal2Hit::~R3BLosCal2Hit()
 
 void R3BLosCal2Hit::SetParContainers()
 {
+<<<<<<< HEAD:los/calib/R3BLosCal2Hit.cxx
   LOG(INFO) << "R3BLosTcal2Hit::SetParContainers()";
   // Parameter Container
   FairRuntimeDb* rtdb = FairRuntimeDb::instance();
@@ -285,11 +291,30 @@ void R3BLosCal2Hit::SetParContainers()
       LOG(INFO) << "R3BLosTcal2Hit:: R3BLosHitPar container open";
   }
 
+=======
+    LOG(INFO) << "R3BLosTcal2Hit::SetParContainers()";
+    // Parameter Container
+    FairRuntimeDb* rtdb = FairRuntimeDb::instance();
+    if (!rtdb)
+    {
+        LOG(ERROR) << "FairRuntimeDb not opened!";
+    }
+    fLosHit_Par = (R3BLosHitPar*)rtdb->getContainer("LosHitPar");
+    if (!fLosHit_Par)
+    {
+        LOG(ERROR) << "R3BLosTcal2Hit:: Couldn't get handle on R3BLosHitPar container";
+    }
+    else
+    {
+        LOG(INFO) << "R3BLosTcal2Hit:: R3BLosHitPar container open";
+    }
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:los/calib/R3BLosCal2Hit.cxx
 }
 
 void R3BLosCal2Hit::SetParameter()
 {
     //--- Parameter Container ---
+<<<<<<< HEAD:los/calib/R3BLosCal2Hit.cxx
      fp0 = fLosHit_Par->Getp0();
      fp1 = fLosHit_Par->Getp1();
 
@@ -297,6 +322,15 @@ void R3BLosCal2Hit::SetParameter()
      flosOffsetY = fLosHit_Par->Getyoffset_MCFD();
      flosVeffX = fLosHit_Par->Getxveff_MCFD();
      flosVeffY = fLosHit_Par->Getyveff_MCFD();
+=======
+    fp0 = fLosHit_Par->Getp0();
+    fp1 = fLosHit_Par->Getp1();
+
+    flosOffsetX = fLosHit_Par->Getxoffset_MCFD();
+    flosOffsetY = fLosHit_Par->Getyoffset_MCFD();
+    flosVeffX = fLosHit_Par->Getxveff_MCFD();
+    flosVeffY = fLosHit_Par->Getyveff_MCFD();
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:los/calib/R3BLosCal2Hit.cxx
 }
 
 InitStatus R3BLosCal2Hit::Init()
@@ -387,9 +421,15 @@ InitStatus R3BLosCal2Hit::Init()
 
 InitStatus R3BLosCal2Hit::ReInit()
 {
+<<<<<<< HEAD:los/calib/R3BLosCal2Hit.cxx
   SetParContainers();
   SetParameter();
   return kSUCCESS;
+=======
+    SetParContainers();
+    SetParameter();
+    return kSUCCESS;
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:los/calib/R3BLosCal2Hit.cxx
 }
 
 /* Calculate a single hit time for each LOS detector
@@ -694,8 +734,13 @@ void R3BLosCal2Hit::Exec(Option_t* option)
 
             x_cm[ihit] = xV_cm[ihit];
             y_cm[ihit] = yV_cm[ihit];
+<<<<<<< HEAD:los/calib/R3BLosCal2Hit.cxx
             Z[ihit] = totsum_corr[ihit]*fp1 + fp0;
            // Z[ihit] = totsum_corr[ihit];
+=======
+            Z[ihit] = totsum_corr[ihit] * fp1 + fp0;
+            //Z[ihit] = totsum_corr[ihit];
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:los/calib/R3BLosCal2Hit.cxx
             t_hit[ihit] = timeLosM_corr[ihit];
 
             if (OptHisto && nPMV == 8 && nPMT == 8 && Igood_event)

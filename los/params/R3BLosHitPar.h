@@ -2,8 +2,13 @@
 #define R3BLosHitPar_H
 
 #include "FairParGenericSet.h"
+<<<<<<< HEAD
 #include "TObject.h"
 #include "TObjArray.h"
+=======
+#include "TObjArray.h"
+#include "TObject.h"
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 #include <TObjString.h>
 
 class FairParamList;
@@ -13,9 +18,14 @@ class R3BLosHitPar : public FairParGenericSet
   public:
     /** Standard constructor **/
     R3BLosHitPar(const TString& name = "LosHitPar",
+<<<<<<< HEAD
                      const TString& title = "Los Hit Parameters",
                      const TString& context = "LosHitParContext");
 
+=======
+                 const TString& title = "Los Hit Parameters",
+                 const TString& context = "LosHitParContext");
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 
     /** Destructor **/
     virtual ~R3BLosHitPar();
@@ -29,8 +39,11 @@ class R3BLosHitPar : public FairParGenericSet
     /** Retrieve all parameters using FairRuntimeDB**/
     Bool_t getParams(FairParamList* list);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
     /** Print values of parameters to the standard output **/
     virtual void print();
     void printParams();
@@ -46,9 +59,13 @@ class R3BLosHitPar : public FairParGenericSet
     void Setp0(Float_t value) { fp0 = value; }
     void Setp1(Float_t value) { fp1 = value; }
 
+<<<<<<< HEAD
 
   private:
 
+=======
+  private:
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
     Float_t fp0, fp1;
     Float_t fxoffset_MCFD, fyoffset_MCFD, fxveff_MCFD, fyveff_MCFD;
 
@@ -56,7 +73,10 @@ class R3BLosHitPar : public FairParGenericSet
     R3BLosHitPar(const R3BLosHitPar&);
 
     ClassDef(R3BLosHitPar, 1);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 };
 
 #endif

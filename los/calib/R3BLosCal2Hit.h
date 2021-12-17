@@ -164,8 +164,13 @@ class R3BLosCal2Hit : public FairTask
   private:
     void SetParameter();
     R3BLosHitPar* fLosHit_Par; // Parameter container
+<<<<<<< HEAD:los/calib/R3BLosCal2Hit.h
     TClonesArray* fCalItems; /**< Array with Cal items - input data. */
     TClonesArray* fHitItems; /**< Array with Hit items - output data. */
+=======
+    TClonesArray* fCalItems;   /**< Array with Cal items - input data. */
+    TClonesArray* fHitItems;   /**< Array with Hit items - output data. */
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:los/calib/R3BLosCal2Hit.h
     Float_t fp0, fp1;
 
     // check for trigger

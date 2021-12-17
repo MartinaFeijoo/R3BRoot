@@ -19,10 +19,9 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class R3BUcesbSource + ;
-#pragma link C++ class R3BReader + ;
-#pragma link C++ class R3BUnpackReader + ;
-//#pragma link C++ class R3BWhiterabbitReader+;
+#pragma link C++ class R3BUcesbSource+;
+#pragma link C++ class R3BReader+;
+#pragma link C++ class R3BUnpackReader+;
 #pragma link C++ class R3BWhiterabbitNeulandReader+;
 #pragma link C++ class R3BWhiterabbitMasterReader+;
 #pragma link C++ class R3BWhiterabbitCalifaReader+;
@@ -31,9 +30,13 @@
 #pragma link C++ class R3BWhiterabbitS8Reader+;
 #pragma link C++ class R3BWhiterabbitPspReader+;
 #pragma link C++ class R3BWhiterabbitLosReader+;
+#pragma link C++ class R3BWhiterabbitPspReader+;
+#pragma link C++ class R3BWhiterabbitMusicReader+;
 #pragma link C++ class R3BWhiterabbitReader+;
 #pragma link C++ class R3BTrloiiTpatReader+;
 #pragma link C++ class R3BTrloiiSampReader+;
+#pragma link C++ class R3BTrloiiScalerReader+;
+#pragma link C++ class R3BTrloiiScalerReader_s467+;
 #pragma link C++ class R3BTimestampMasterReader+;
 #pragma link C++ class R3BBeamMonitorReader+;
 #pragma link C++ class R3BPspxReader+;
@@ -69,6 +72,7 @@
 #pragma link C++ class R3BAmsReader+;
 #pragma link C++ class R3BMusicReader+;
 #pragma link C++ class R3BFootSiReader+;
+#pragma link C++ class R3BCalifaJulichReader+;
 
 #pragma link C++ class EXT_STR_h101_unpack_t;
 #pragma link C++ class EXT_STR_h101_whiterabbit_onion_t;
@@ -111,6 +115,8 @@
 #pragma link C++ class EXT_STR_h101_WRS2_onion_t;
 #pragma link C++ class EXT_STR_h101_WRS8_onion_t;
 #pragma link C++ class EXT_STR_h101_WRLOS_onion_t;
+#pragma link C++ class EXT_STR_h101_WRMUSIC_onion_t;
+#pragma link C++ class EXT_STR_h101_TRLO_onion_t;
 #pragma link C++ class EXT_STR_h101_TIMESTAMP_PSPX_onion_t;
 #pragma link C++ class EXT_STR_h101_MUSIC_onion_t;
 #pragma link C++ class EXT_STR_h101_SAMP_onion_t;

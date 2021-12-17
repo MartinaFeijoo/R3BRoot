@@ -11,16 +11,16 @@
 # or submit itself to any jurisdiction.                                      #
 ##############################################################################
 
-# Create a library called "libR3B" which includes the source files given in
-# the array .
-# The extension is already found.  Any number of sources could be listed here.
+# Create a library called "libR3Bsource" which includes the source files given 
+# in the array. The extension is already found. Any number of sources could be 
+# listed here.
 
 set(SYSTEM_INCLUDE_DIRECTORIES
 ${SYSTEM_INCLUDE_DIRECTORIES}
 ${BASE_INCLUDE_DIRECTORIES}
 ${ucesb_INCLUDE_DIR}
 )
-Set(R3BSOF_SOURCE_DIR ${R3BROOT_SOURCE_DIR}/sofia)
+# Set(R3BSOF_SOURCE_DIR ${R3BROOT_SOURCE_DIR}/sofia)
 
 set(INCLUDE_DIRECTORIES
 #put here all directories where header files are located
@@ -45,6 +45,7 @@ ${R3BROOT_SOURCE_DIR}/r3bdata/startrackData
 ${R3BROOT_SOURCE_DIR}/r3bdata/amsData
 ${R3BROOT_SOURCE_DIR}/r3bdata/footData
 ${R3BROOT_SOURCE_DIR}/r3bdata/wrData
+${R3BROOT_SOURCE_DIR}/r3bdata/trloiiData
 ${R3BROOT_SOURCE_DIR}/r3bdata/musicData
 ${R3BROOT_SOURCE_DIR}/r3bdata/sampData
 )
@@ -72,8 +73,11 @@ R3BWhiterabbitS2Reader.cxx
 R3BWhiterabbitS8Reader.cxx
 R3BWhiterabbitLosReader.cxx
 R3BWhiterabbitPspReader.cxx
+R3BWhiterabbitMusicReader.cxx
 R3BTrloiiTpatReader.cxx
 R3BTrloiiSampReader.cxx
+R3BTrloiiScalerReader.cxx
+R3BTrloiiScalerReader_s467.cxx
 R3BTimestampMasterReader.cxx
 R3BPspxReader.cxx
 R3BBunchedFiberReader.cxx
@@ -104,6 +108,7 @@ R3BSfibReader.cxx
 R3BTofdReader.cxx
 R3BPdcReader.cxx
 R3BCalifaFebexReader.cxx
+R3BCalifaJulichReader.cxx
 R3BPtofReader.cxx
 R3BNeulandTamexReader.cxx
 R3BNeulandTacquilaReader.cxx
@@ -118,13 +123,17 @@ Set(STRUCT_HEADERS
 ext/ext_h101_unpack.h
 ext/ext_h101_whiterabbit.h
 ext/ext_h101_wrmaster.h
+ext/ext_h101_wrcalifa.h
 ext/ext_h101_wrneuland.h
 ext/ext_h101_wrams.h
+ext/ext_h101_wrmusic.h
 ext/ext_h101_timestamp_pspx.h
 ext/ext_h101_wrs2.h
 ext/ext_h101_wrs8.h
 ext/ext_h101_wrlos.h
 ext/ext_h101_tpat.h
+ext/ext_h101_trlo.h
+ext/ext_h101_trlo_s467.h
 ext/ext_h101_timestamp_master.h
 ext/ext_h101_bmon.h
 ext/ext_h101_fibzero.h

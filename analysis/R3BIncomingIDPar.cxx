@@ -14,6 +14,7 @@ R3BIncomingIDPar::R3BIncomingIDPar(const TString& name, const TString& title, co
     : FairParGenericSet(name, title, context)
     , fNumDet(1)
 {
+<<<<<<< HEAD
     fToFoffset    = new TArrayF(fNumDet);
     fPosS2Left    = new TArrayF(fNumDet);
     fPosS2Right   = new TArrayF(fNumDet);
@@ -22,6 +23,15 @@ R3BIncomingIDPar::R3BIncomingIDPar(const TString& name, const TString& title, co
     fTof2InvV_p0  = new TArrayF(fNumDet);
     fTof2InvV_p1  = new TArrayF(fNumDet);
 
+=======
+    fToFoffset = new TArrayF(fNumDet);
+    fPosS2Left = new TArrayF(fNumDet);
+    fPosS2Right = new TArrayF(fNumDet);
+    fBrho0_S2toCC = new TArrayF(fNumDet);
+    fDispersionS2 = new TArrayF(fNumDet);
+    fTof2InvV_p0 = new TArrayF(fNumDet);
+    fTof2InvV_p1 = new TArrayF(fNumDet);
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 }
 
 // ----  Destructor ------------------------------------------------------------
@@ -176,7 +186,11 @@ void R3BIncomingIDPar::print() { printParams(); }
 // ----  Method printParams ----------------------------------------------------
 void R3BIncomingIDPar::printParams()
 {
+<<<<<<< HEAD
     LOG(INFO) << "R3BIncomingIDPar: Incoming ID parameters :" ;
+=======
+    LOG(INFO) << "R3BIncomingIDPar: Incoming ID parameters :";
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 
     // LOG(INFO) << "Brho"
     //           << " "
@@ -188,8 +202,11 @@ void R3BIncomingIDPar::printParams()
 
     // LOG(INFO) <<  fBrho << "\t" <<  fToFoffset[0] << "\t" <<
     //          fPosS2Left[0]<< "\t" << fPosS2Right[0];
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 }
 
 ClassImp(R3BIncomingIDPar)

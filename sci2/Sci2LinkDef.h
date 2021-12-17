@@ -25,6 +25,10 @@
 #pragma link C++ class R3BSci2Tcal2Hit+;
 #pragma link C++ class R3BSci2HitPar+;
 #pragma link C++ class R3BSci2ContFact+;
+<<<<<<< HEAD
+=======
+#pragma link C++ class R3BOnlineSpectraSci2+;
+>>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 
 #endif
 

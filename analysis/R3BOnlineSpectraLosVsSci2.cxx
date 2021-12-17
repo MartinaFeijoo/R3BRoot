@@ -56,6 +56,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+
 #define IS_NAN(x) TMath::IsNaN(x)
 using namespace std;
 
@@ -446,6 +447,8 @@ InitStatus R3BOnlineSpectraLosVsSci2::Init()
 
     //------------------------------------------------------------------------
     // Los detector
+
+    fNofLosDetectors = 1;
 
     // MAIN FOLDER-LOS
     TFolder* mainfol = new TFolder("LOS", "LOS info");

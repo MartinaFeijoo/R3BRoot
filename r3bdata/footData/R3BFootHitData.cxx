@@ -23,8 +23,7 @@ R3BFootHitData::R3BFootHitData()
     , fDetId(-1)
     , fNbHit(0)
     , fMulStrip(0)
-    , fX(0)
-    , fY(0)
+    , fPos(0)
     , fTheta(0)
     , fPhi(0)
     , fmaster(0, 0, 0)
@@ -33,19 +32,12 @@ R3BFootHitData::R3BFootHitData()
 }
 
 // -----   Standard constructor   ---------------------------------------
-R3BFootHitData::R3BFootHitData(Int_t detid,
-                               Int_t nbhit,
-                               Double_t x,
-                               Double_t y,
-                               TVector3 master,
-                               Double_t energy,
-                               Int_t mulstrip)
+R3BFootHitData::R3BFootHitData(Int_t detid, Int_t nbhit, Double_t pos, TVector3 master, Double_t energy, Int_t mulstrip)
     : FairMultiLinkedData()
     , fDetId(detid)
     , fNbHit(nbhit)
     , fMulStrip(mulstrip)
-    , fX(x)
-    , fY(y)
+    , fPos(pos)
     , fTheta(master.Theta())
     , fPhi(master.Phi())
     , fmaster(master)
@@ -59,8 +51,7 @@ R3BFootHitData::R3BFootHitData(const R3BFootHitData& right)
     , fDetId(right.fDetId)
     , fNbHit(right.fNbHit)
     , fMulStrip(right.fMulStrip)
-    , fX(right.fX)
-    , fY(right.fY)
+    , fPos(right.fPos)
     , fTheta(right.fmaster.Theta())
     , fPhi(right.fmaster.Phi())
     , fmaster(right.fmaster)
