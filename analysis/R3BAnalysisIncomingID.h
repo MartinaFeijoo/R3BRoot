@@ -109,10 +109,6 @@ class R3BAnalysisIncomingID : public FairTask
     virtual void SetParContainers();
 
   private:
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
     void SetParameter();
     R3BIncomingIDPar* fIncomingID_Par; // Parameter container
     TClonesArray* fHitItemsMus;
@@ -122,30 +118,19 @@ class R3BAnalysisIncomingID : public FairTask
     TClonesArray* fHitLos;
 
     R3BEventHeader* header; /**< Event header. */
-<<<<<<< HEAD
-    Bool_t fOnline; // Don't store data for online
-=======
     Bool_t fOnline;         // Don't store data for online
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
     Double_t fP0, fP1, fP2, fZprimary, fZoffset;
 
     Double_t fPos_p0;
     Double_t fPos_p1;
 
     Int_t fNumDet;
-<<<<<<< HEAD
-    TArrayF *fToFoffset;
-    TArrayF *fPosS2Left, *fPosS2Right;
-    TArrayF *fTof2InvV_p0, *fTof2InvV_p1;
-    TArrayF *fBrho0_S2toCC;
-    TArrayF *fDispersionS2;
-=======
     TArrayF* fToFoffset;
     TArrayF *fPosS2Left, *fPosS2Right;
     TArrayF *fTof2InvV_p0, *fTof2InvV_p1;
     TArrayF* fBrho0_S2toCC;
     TArrayF* fDispersionS2;
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
+
     Float_t fx0_point, fy0_point, frot_ang;
     Float_t fx0_Aq, fy0_Aq, fang_Aq;
 

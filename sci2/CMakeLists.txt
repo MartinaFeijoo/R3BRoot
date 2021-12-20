@@ -27,10 +27,7 @@ ${R3BROOT_SOURCE_DIR}/passive
 ${R3BROOT_SOURCE_DIR}/sci2
 ${R3BROOT_SOURCE_DIR}/sci2/params
 ${R3BROOT_SOURCE_DIR}/sci2/calib
-<<<<<<< HEAD
-=======
 ${R3BROOT_SOURCE_DIR}/sci2/online
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 ${R3BROOT_SOURCE_DIR}/r3bdata/
 ${R3BROOT_SOURCE_DIR}/r3bdata/calData
 ${R3BROOT_SOURCE_DIR}/r3bdata/dchData
@@ -61,10 +58,7 @@ params/R3BSci2Mapped2CalPar.cxx
 calib/R3BSci2Tcal2Hit.cxx
 params/R3BSci2HitPar.cxx
 params/R3BSci2ContFact.cxx
-<<<<<<< HEAD
-=======
 online/R3BOnlineSpectraSci2.cxx
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 )
 
 # fill list of header files from list of source files
