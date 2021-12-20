@@ -14,9 +14,9 @@
 #include "FairLogger.h"
 #include "FairRootManager.h"
 
+#include "R3BAmsMappedData.h"
 #include "R3BCalifaJulichReader.h"
 #include "R3BCalifaMappedData.h"
-#include "R3BAmsMappedData.h"
 #include "TClonesArray.h"
 
 /**
@@ -58,7 +58,7 @@ Bool_t R3BCalifaJulichReader::Init(ext_data_struct_info* a_struct_info)
     if (!ok)
     {
         LOG(ERROR) << "R3BCalifaJulichReader::Failed to setup structure information.";
-        //LOG(ERROR) << "sizeof=" << sizeof(EXT_STR_h101_CALIFA);
+        // LOG(ERROR) << "sizeof=" << sizeof(EXT_STR_h101_CALIFA);
         return kFALSE;
     }
 
@@ -93,16 +93,14 @@ Bool_t R3BCalifaJulichReader::Read()
 
         int16_t tot = fData->CALIFA_TOTv[crystal];
 
-	if(channelNumber<1 || channelNumber>80)
-	  std::cout << "ERROR TO CHECK!! Channel number="<<channelNumber << " detected in data."<< std::endl;
+        if (channelNumber < 1 || channelNumber > 80)
+            std::cout << "ERROR TO CHECK!! Channel number=" << channelNumber << " detected in data." << std::endl;
 
         if (channelNumber < 17)
-	  new ((*fArrayCalifa)[fArrayCalifa->GetEntriesFast()])
-            R3BCalifaMappedData(channelNumber, energy, nf, ns, febextime, wrts, ov, pu, dc, tot);
+            new ((*fArrayCalifa)[fArrayCalifa->GetEntriesFast()])
+                R3BCalifaMappedData(channelNumber, energy, nf, ns, febextime, wrts, ov, pu, dc, tot);
         else if (channelNumber < 81)
-	  new ((*fArrayAms)[fArrayAms->GetEntriesFast()])
-            R3BAmsMappedData(1,channelNumber-16, energy);
-
+            new ((*fArrayAms)[fArrayAms->GetEntriesFast()]) R3BAmsMappedData(1, channelNumber - 16, energy);
     }
     fNEvent += 1;
     return kTRUE;

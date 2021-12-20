@@ -81,7 +81,6 @@ R3BAnalysisIncomingID::R3BAnalysisIncomingID(const char* name, Int_t iVerbose)
     fDispersionS2 = new TArrayF(fNumDet);
     fTof2InvV_p0 = new TArrayF(fNumDet);
     fTof2InvV_p1 = new TArrayF(fNumDet);
-
 }
 
 R3BAnalysisIncomingID::~R3BAnalysisIncomingID()
@@ -176,7 +175,6 @@ void R3BAnalysisIncomingID::SetParameter()
         fBrho0_S2toCC->AddAt(fIncomingID_Par->GetBrho0_S2toCC(i), i - 1);
     }
     return;
-
 }
 
 InitStatus R3BAnalysisIncomingID::Init()
@@ -385,7 +383,6 @@ R3BFrsData* R3BAnalysisIncomingID::AddData(Int_t StaId,
     TClonesArray& clref = *fFrsDataCA;
     Int_t size = clref.GetEntriesFast();
     return new (clref[size]) R3BFrsData(StaId, StoId, z, aq, beta, brho, xs2, xc);
-
 }
 
 ClassImp(R3BAnalysisIncomingID)

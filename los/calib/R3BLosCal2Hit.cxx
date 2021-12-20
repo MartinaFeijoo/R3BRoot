@@ -17,7 +17,6 @@
 // ------------------------------------------------------------
 
 #include "R3BLosCal2Hit.h"
-#include "R3BLosHitPar.h"
 #include "FairLogger.h"
 #include "FairRuntimeDb.h"
 #include "R3BEventHeader.h"
@@ -285,7 +284,6 @@ void R3BLosCal2Hit::SetParContainers()
     {
         LOG(INFO) << "R3BLosTcal2Hit:: R3BLosHitPar container open";
     }
-
 }
 
 void R3BLosCal2Hit::SetParameter()
@@ -696,7 +694,7 @@ void R3BLosCal2Hit::Exec(Option_t* option)
             x_cm[ihit] = xV_cm[ihit];
             y_cm[ihit] = yV_cm[ihit];
             Z[ihit] = totsum_corr[ihit] * fp1 + fp0;
-            //Z[ihit] = totsum_corr[ihit];
+            // Z[ihit] = totsum_corr[ihit];
             t_hit[ihit] = timeLosM_corr[ihit];
 
             if (OptHisto && nPMV == 8 && nPMT == 8 && Igood_event)

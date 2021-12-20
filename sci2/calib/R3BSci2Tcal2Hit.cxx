@@ -26,7 +26,6 @@
 #include "R3BSci2TcalData.h"
 #include "R3BTCalEngine.h"
 #include "R3BTCalPar.h"
-#include "R3BSci2HitPar.h"
 
 #include "TClonesArray.h"
 

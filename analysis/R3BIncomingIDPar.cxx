@@ -187,7 +187,6 @@ void R3BIncomingIDPar::printParams()
 
     // LOG(INFO) <<  fBrho << "\t" <<  fToFoffset[0] << "\t" <<
     //          fPosS2Left[0]<< "\t" << fPosS2Right[0];
-
 }
 
 ClassImp(R3BIncomingIDPar)
