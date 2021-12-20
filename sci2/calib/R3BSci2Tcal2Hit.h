@@ -94,17 +94,10 @@ class R3BSci2Tcal2Hit : public FairTask
   private:
     void SetParameter();
     R3BSci2HitPar* fSci2Hit_Par; // Parameter container
-<<<<<<< HEAD:sci2/calib/R3BSci2Tcal2Hit.h
-    Bool_t fOnline;          // Don't store data for online
-    TClonesArray* fCalItems; /* < Array with Cal items - input data. */
-    TClonesArray* fHitItems; /* < Array with Hit items - output data. */
-    Double_t fClockFreq;     /* < Clock cycle in [ns]. */
-=======
     Bool_t fOnline;              // Don't store data for online
     TClonesArray* fCalItems;     /* < Array with Cal items - input data. */
     TClonesArray* fHitItems;     /* < Array with Hit items - output data. */
     Double_t fClockFreq;         /* < Clock cycle in [ns]. */
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:sci2/calib/R3BSci2Tcal2Hit.h
     Double_t fsci2VeffX;
     Double_t fsci2OffsetX;
     Double_t fsci2OffsetXT;

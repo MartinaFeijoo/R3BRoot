@@ -59,26 +59,6 @@ R3BSci2Tcal2Hit::~R3BSci2Tcal2Hit()
 
 void R3BSci2Tcal2Hit::SetParContainers()
 {
-<<<<<<< HEAD:sci2/calib/R3BSci2Tcal2Hit.cxx
-  LOG(INFO) << "R3BSci2Tcal2Hit::SetParContainers()";
-  // Parameter Container
-  // Reading IncomingIDPar from FairRuntimeDb
-  FairRuntimeDb* rtdb = FairRuntimeDb::instance();
-  if (!rtdb)
-  {
-      LOG(ERROR) << "FairRuntimeDb not opened!";
-  }
-  fSci2Hit_Par = (R3BSci2HitPar*)rtdb->getContainer("Sci2HitPar");
-  if (!fSci2Hit_Par)
-  {
-      LOG(ERROR) << "R3BSci2Tcal2Hit:: Couldn't get handle on R3BSci2HitPar container";
-  }
-  else
-  {
-      LOG(INFO) << "R3BSci2Tcal2Hit:: R3BSci2HitPar container open";
-  }
-
-=======
     LOG(INFO) << "R3BSci2Tcal2Hit::SetParContainers()";
     // Parameter Container
     // Reading IncomingIDPar from FairRuntimeDb
@@ -96,19 +76,13 @@ void R3BSci2Tcal2Hit::SetParContainers()
     {
         LOG(INFO) << "R3BSci2Tcal2Hit:: R3BSci2HitPar container open";
     }
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:sci2/calib/R3BSci2Tcal2Hit.cxx
 }
 
 void R3BSci2Tcal2Hit::SetParameter()
 {
     //--- Parameter Container ---
-<<<<<<< HEAD:sci2/calib/R3BSci2Tcal2Hit.cxx
-     fPos_p0 = fSci2Hit_Par->GetPos_p0();
-     fPos_p1 = fSci2Hit_Par->GetPos_p1();
-=======
     fPos_p0 = fSci2Hit_Par->GetPos_p0();
     fPos_p1 = fSci2Hit_Par->GetPos_p1();
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:sci2/calib/R3BSci2Tcal2Hit.cxx
 }
 
 InitStatus R3BSci2Tcal2Hit::Init()
@@ -133,15 +107,9 @@ InitStatus R3BSci2Tcal2Hit::Init()
 
 InitStatus R3BSci2Tcal2Hit::ReInit()
 {
-<<<<<<< HEAD:sci2/calib/R3BSci2Tcal2Hit.cxx
-  SetParContainers();
-  SetParameter();
-  return kSUCCESS;
-=======
     SetParContainers();
     SetParameter();
     return kSUCCESS;
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:sci2/calib/R3BSci2Tcal2Hit.cxx
 }
 
 void R3BSci2Tcal2Hit::Exec(Option_t* option)
@@ -168,11 +136,7 @@ void R3BSci2Tcal2Hit::Exec(Option_t* option)
             R3BSci2TcalData* hittcal = (R3BSci2TcalData*)fCalItems->At(ihit);
             if (!hittcal)
                 continue;
-<<<<<<< HEAD:sci2/calib/R3BSci2Tcal2Hit.cxx
-            iDet = hittcal->GetDetector() -1 ;
-=======
             iDet = hittcal->GetDetector() - 1;
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8:sci2/calib/R3BSci2Tcal2Hit.cxx
             iCh = hittcal->GetChannel() - 1;
             iRawTimeNs[iDet][iCh][multTcal[iDet][iCh]] = hittcal->GetRawTimeNs();
             multTcal[iDet][iCh]++;

@@ -13,14 +13,7 @@ R3BLosHitPar::R3BLosHitPar(const TString& name, const TString& title, const TStr
 }
 
 // ----  Destructor ------------------------------------------------------------
-<<<<<<< HEAD
-R3BLosHitPar::~R3BLosHitPar()
-{
-    clear();
-}
-=======
 R3BLosHitPar::~R3BLosHitPar() { clear(); }
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 
 // ----  Method clear ----------------------------------------------------------
 void R3BLosHitPar::clear()
@@ -43,10 +36,6 @@ void R3BLosHitPar::putParams(FairParamList* list)
     list->add("yoffset_MCFD", fyoffset_MCFD);
     list->add("xveff_MCFD", fxveff_MCFD);
     list->add("yveff_MCFD", fyveff_MCFD);
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -103,24 +92,14 @@ void R3BLosHitPar::print() { printParams(); }
 // ----  Method printParams ----------------------------------------------------
 void R3BLosHitPar::printParams()
 {
-<<<<<<< HEAD
-    LOG(INFO) << "R3BLosHitPar: Los calibration parameters (Z-charge):" ;
-=======
     LOG(INFO) << "R3BLosHitPar: Los calibration parameters (Z-charge):";
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 
     LOG(INFO) << "p0"
               << " "
               << "p1"
-<<<<<<< HEAD
-              << " " ;
-
-    LOG(INFO) << fp0 << "\t" <<  fp1;
-=======
               << " ";
 
     LOG(INFO) << fp0 << "\t" << fp1;
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 }
 
 ClassImp(R3BLosHitPar)

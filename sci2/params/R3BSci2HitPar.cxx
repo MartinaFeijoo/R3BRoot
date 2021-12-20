@@ -13,14 +13,7 @@ R3BSci2HitPar::R3BSci2HitPar(const TString& name, const TString& title, const TS
 }
 
 // ----  Destructor ------------------------------------------------------------
-<<<<<<< HEAD
-R3BSci2HitPar::~R3BSci2HitPar()
-{
-    clear();
-}
-=======
 R3BSci2HitPar::~R3BSci2HitPar() { clear(); }
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 
 // ----  Method clear ----------------------------------------------------------
 void R3BSci2HitPar::clear()
@@ -71,24 +64,14 @@ void R3BSci2HitPar::print() { printParams(); }
 // ----  Method printParams ----------------------------------------------------
 void R3BSci2HitPar::printParams()
 {
-<<<<<<< HEAD
-    LOG(INFO) << "R3BSci2HitPar: Incoming ID parameters :" ;
-=======
     LOG(INFO) << "R3BSci2HitPar: Incoming ID parameters :";
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 
     LOG(INFO) << "Pos_p0"
               << " "
               << "Pos_p1"
-<<<<<<< HEAD
-              << " " ;
-
-    LOG(INFO) << fPos_p0 << "\t" <<  fPos_p1;
-=======
               << " ";
 
     LOG(INFO) << fPos_p0 << "\t" << fPos_p1;
->>>>>>> 6a752f915142a1b7aff22d65f226c6e635d89be8
 }
 
 ClassImp(R3BSci2HitPar)
