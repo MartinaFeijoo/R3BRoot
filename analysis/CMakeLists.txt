@@ -33,6 +33,7 @@ ${R3BROOT_SOURCE_DIR}/music/pars
 ${R3BROOT_SOURCE_DIR}/tof
 ${R3BROOT_SOURCE_DIR}/tofi
 ${R3BROOT_SOURCE_DIR}/tofd/online
+${R3BROOT_SOURCE_DIR}/tofd/pars
 ${R3BROOT_SOURCE_DIR}/tcal
 ${R3BROOT_SOURCE_DIR}/fiber
 ${R3BROOT_SOURCE_DIR}/fiber/pars
@@ -81,6 +82,8 @@ ${R3BROOT_SOURCE_DIR}/analysis
 ${R3BROOT_SOURCE_DIR}/analysis/pars
 ${R3BROOT_SOURCE_DIR}/analysis/offline
 ${R3BROOT_SOURCE_DIR}/analysis/online
+${R3BROOT_SOURCE_DIR}/sofia/sofana/
+${R3BROOT_SOURCE_DIR}/sofia/sofdata/trackingData
 )
 
 include_directories( ${INCLUDE_DIRECTORIES})
@@ -98,7 +101,7 @@ Set(LINKDEF AnaLinkDef.h)
 
 Set(DEPENDENCIES
 GeoBase ParBase MbsAPI Base FairTools R3BPassive R3BData Core Geom GenVector Physics Matrix MathCore R3BTraRene R3BTracking
-R3BSsd R3BLos R3BCalifa R3BMwpc R3BTofD R3BTwim R3BMusic R3BBunchedFiber
+R3BSsd R3BLos R3BCalifa R3BMwpc R3BTofD R3BTwim R3BMusic R3BBunchedFiber R3BSofAna
 )
 
 Set(LIBRARY_NAME R3BAnalysis)
