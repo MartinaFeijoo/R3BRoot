@@ -87,7 +87,6 @@ void R3BAnalysisTrackerFragment::SetParContainers()
     if (!fTargetGeoPar)
     {
         LOG(WARNING) << "R3BAnalysisTrackerFragment::SetParContainers() : Could not get access to TargetGeoPar container.";
-        return;
     }
     else
         LOG(INFO) << "R3BAnalysisTrackerFragment::SetParContainers() : Container TargetGeoPar found.";
@@ -96,7 +95,6 @@ void R3BAnalysisTrackerFragment::SetParContainers()
     if (!fMusicGeoPar)
     {
         LOG(ERROR) << "R3BAnalysisTrackerFragment::SetParContainers() : Could not get access to MusicGeoPar container.";
-        return;
     }
     else
         LOG(INFO) << "R3BAnalysisTrackerFragment::SetParContainers() : Container MusicGeoPar found.";
@@ -105,7 +103,6 @@ void R3BAnalysisTrackerFragment::SetParContainers()
     if (!fFib10GeoPar)
     {
         LOG(ERROR) << "R3BAnalysisTrackerFragment::SetParContainers() : Could not get access to Fi10GeoPar container.";
-        return;
     }
     else
         LOG(INFO) << "R3BAnalysisTrackerFragment::SetParContainers() : Container Fi10GeoPar found.";
@@ -114,7 +111,6 @@ void R3BAnalysisTrackerFragment::SetParContainers()
     if (!fFib11GeoPar)
     {
         LOG(ERROR) << "R3BAnalysisTrackerFragment::SetParContainers() : Could not get access to Fi11GeoPar container.";
-        return;
     }
     else
         LOG(INFO) << "R3BAnalysisTrackerFragment::SetParContainers() : Container Fi11GeoPar found.";
@@ -123,7 +119,6 @@ void R3BAnalysisTrackerFragment::SetParContainers()
     if (!fFib12GeoPar)
     {
         LOG(ERROR) << "R3BAnalysisTrackerFragment::SetParContainers() : Could not get access to Fi12GeoPar container.";
-        return;
     }
     else
         LOG(INFO) << "R3BAnalysisTrackerFragment::SetParContainers() : Container Fi12GeoPar found.";
@@ -132,7 +127,6 @@ void R3BAnalysisTrackerFragment::SetParContainers()
     if (!fTofDGeoPar)
     {
         LOG(ERROR) << "R3BAnalysisTrackerFragment::SetParContainers() : Could not get access to tofdGeoPar container.";
-        return;
     }
     else
         LOG(INFO) << "R3BAnalysisTrackerFragment::SetParContainers() : Container tofdGeoPar found.";
@@ -141,7 +135,6 @@ void R3BAnalysisTrackerFragment::SetParContainers()
     if (!fMwpc0GeoPar)
     {
         LOG(ERROR) << "R3BAnalysisTrackerFragment::SetParContainers() : Could not get access to Mwpc0GeoPar container.";
-        return;
     }
     else
         LOG(INFO) << "R3BAnalysisTrackerFragment::SetParContainers() : Container Mwpc0GeoPar found.";
@@ -152,9 +145,13 @@ void R3BAnalysisTrackerFragment::SetParContainers()
 void R3BAnalysisTrackerFragment::SetParameter()
 {
     //--- Parameter Container ---
-    fFieldCentre = fGladPar->GetFieldCentre();
-    fEffLength = fGladPar->GetEffectiveLength();
-    fBfield_Glad = fGladPar->GetMagneticField();
+    // fFieldCentre = fGladPar->GetFieldCentre();
+    // fEffLength = fGladPar->GetEffectiveLength();
+    // fBfield_Glad = fGladPar->GetMagneticField();
+
+    fFieldCentre = 308.;
+    fEffLength =  210.;
+    fBfield_Glad = 2.155;
     return;
 }
 
@@ -214,7 +211,6 @@ InitStatus R3BAnalysisTrackerFragment::ReInit()
 void R3BAnalysisTrackerFragment::Exec(Option_t* option)
 {
   // Reset entries in output arrays, local arrays
-  std::cout << "exec" << std::endl;
   Reset();
   Int_t nHitMusic = fHitItemsMus->GetEntries();
   Int_t nHitFib10 = fHitItemsFib10->GetEntries();
@@ -226,8 +222,8 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
       return;
 
   TVector3 pos1[2];
-  pos1[0].SetXYZ(-100., 0., 0.);
-  pos1[1].SetXYZ(-100., 0., 0.);
+  pos1[0].SetXYZ(0., 0., 0.);
+  pos1[1].SetXYZ(0., 0., 0.);
   TVector3 pos2[2];
   pos2[0].SetXYZ(-100., 0., 0.);
   pos2[1].SetXYZ(-100., 0., 0.);
@@ -284,8 +280,8 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
       fib12_x = hit->GetX(); fib12_y = hit->GetY();
   }
 
-  Length = GetLength(pos1[1].X() / 10., pos2[1].X() / 10., pos3[1].X() / 10.);
-  Brho = GetBrho(pos1[1].X() / 10., pos2[1].X() / 10., pos3[1].X() / 10.);
+  Length = GetLength(pos1[1].X() / 10., pos2[1].X() / 10., fib10_x/10.);
+  Brho = GetBrho(pos1[1].X() / 10., pos2[1].X() / 10., fib10_x/10.);
 
   Double_t v = Length / tof / c;
   Double_t gamma = 1. / sqrt(1. - v * v);
@@ -327,16 +323,16 @@ Double_t R3BAnalysisTrackerFragment::GetBrho(Double_t position1, Double_t positi
 
     auto pos2 = frot * pos + ftrans;
 
-    // std::cout<<"E: "<<pos2.X()<<" "<<pos2.Y()<<" "<<pos2.Z()<<std::endl;
-
+    //std::cout<<"pos2"<<pos2.X()<<" "<<pos2.Y()<<" "<<pos2.Z()<<std::endl;
     auto pos3 = pos2 - posc;
+    //std::cout<<"pos3"<<pos3.X()<<" "<<pos3.Y()<<" "<<pos3.Z()<<std::endl;
 
     Double_t eta = atan(pos3.X() / pos3.Z());
 
     // std::cout<<eta<<std::endl;
 
-    Double_t xd = xc + L / 2. * sin(eta) / cos(eta + alpha);
-    Double_t zd = zc + L / 2. * cos(eta) / cos(eta + alpha);
+    Double_t xd = xc + L / 2. * sin(eta) / cos(eta - alpha);
+    Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
 
     TVector3 posd = { xd, 0., zd };
 
@@ -347,9 +343,11 @@ Double_t R3BAnalysisTrackerFragment::GetBrho(Double_t position1, Double_t positi
 
     TVector3 posf = { xf, 0., zf };
 
-    // std::cout<<"f: "<<xf<<" "<<zf<<std::endl;
+    //std::cout<<"eta "<< eta <<" theta "<< theta <<std::endl;
 
-    Double_t rho = 0.5 * L / sin((theta - eta) / 2.0);
+    Double_t rho = abs(0.5 * L / sin((theta - eta)/2.0));
+    //std::cout << "rho from GetBrho " << rho/100  << " rho/cos() " << rho/cos(alpha-(theta+eta)/2.0)/100 << std::endl;
+
     brho = rho * fBfield_Glad;
 
     return brho / 100.; //[mT]
@@ -360,7 +358,7 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     Double_t length = 0.;
     Double_t L = fEffLength; // cm
     Double_t alpha = -14. * TMath::DegToRad();
-    Double_t beta = -20. * TMath::DegToRad();
+    Double_t beta = -18. * TMath::DegToRad();
 
     //Double_t theta = atan((pos2 - pos1) / (fMw2GeoPar->GetPosZ() - fMwpc0GeoPar->GetPosZ()));
     Double_t theta = music_ang;
@@ -400,8 +398,8 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
 
     // std::cout<<eta<<std::endl;
 
-    Double_t xd = xc + L / 2. * sin(eta) / cos(eta + alpha);
-    Double_t zd = zc + L / 2. * cos(eta) / cos(eta + alpha);
+    Double_t xd = xc + L / 2. * sin(eta) / cos(eta - alpha);
+    Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
 
     TVector3 posd = { xd, 0., zd };
 
@@ -421,10 +419,12 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     // double omega = 2.0/sin(sqrt( (posd.Z()-posb.Z())*(posd.Z()-posb.Z()) + (posd.X()-posb.X())*(posd.X()-posb.X())
     // )/2.0/rho);
 
+    //std::cout << "rho from GetLength " << rho/100 << std::endl;
     Double_t omega =
         2.0 * asin(sqrt((posd.Z() - posb.Z()) * (posd.Z() - posb.Z()) + (posd.X() - posb.X()) * (posd.X() - posb.X())) /
                    2.0 / rho);
 
+    // d=98.75cm is the distance from Fi10 to ToFD in s515
     length = (zb - fTargetGeoPar->GetPosZ()) / cos(theta) + omega * rho + (posf.Z() - posd.Z()) / cos(-eta) + 98.75;
 
     // std::cout<<mw2<<" "<<mw3<<" "<< rho <<" "<<omega <<" "<<omega*rho <<" "<<(posd-posb).Mag()<<" "<<
@@ -440,18 +440,18 @@ void R3BAnalysisTrackerFragment::FinishEvent() {}
 void R3BAnalysisTrackerFragment::Reset()
 {
     LOG(DEBUG) << "Clearing AnalysisTrackerFragments Structures";
-    if (fHitItemsLos)
-        fHitItemsLos->Clear();
-    if (fHitItemsMus)
-        fHitItemsMus->Clear();
-    if (fHitItemsFib10)
-        fHitItemsFib10->Clear();
-    if (fHitItemsFib11)
-        fHitItemsFib11->Clear();
-    if (fHitItemsFib12)
-        fHitItemsFib12->Clear();
-    if (fHitItemsTofd)
-        fHitItemsTofd->Clear();
+    // if (fHitItemsLos)
+    //     fHitItemsLos->Clear();
+    // if (fHitItemsMus)
+    //     fHitItemsMus->Clear();
+    // if (fHitItemsFib10)
+    //     fHitItemsFib10->Clear();
+    // if (fHitItemsFib11)
+    //     fHitItemsFib11->Clear();
+    // if (fHitItemsFib12)
+    //     fHitItemsFib12->Clear();
+    // if (fHitItemsTofd)
+    //     fHitItemsTofd->Clear();
     if (fTrackingDataCA)
         fTrackingDataCA->Clear();
 }
