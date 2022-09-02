@@ -154,7 +154,8 @@ void R3BFiberDigitizer::Exec(Option_t* opt)
             // vpos = fRot * (vpos);
             time = pointData[i]->GetTime() + rand->Gaus(0., tsigma);
 
-            fiber = (int)std::round(vpos.X() / fiber_thickness);
+            fiber = (int) (std::round(vpos.X() / fiber_thickness) + fiber_nbr/2.);
+            //std::cout << "fiber" << fiber << std::endl;
             // Add hit data
             AddHitData(1,
                        vpos.X() * 10. + rand->Gaus(0., 0.1),
