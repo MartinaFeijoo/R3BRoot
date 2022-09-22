@@ -27,6 +27,7 @@
 
 #include "R3BSofTrackingData.h"
 
+
 class TClonesArray;
 class R3BTGeoPar;
 class R3BSofGladFieldPar;
@@ -76,6 +77,7 @@ class R3BAnalysisTrackerFragment : public FairTask
   private:
     void SetParameter();
     Double_t GetLength(Double_t mw1, Double_t mw2, Double_t mw3);
+    Double_t GetLength_fib(Double_t mw1, Double_t mw2, Double_t mw3);
     Double_t GetBrho(Double_t mw1, Double_t mw2, Double_t mw3);
     Double_t GetVelocity(Double_t len, Double_t tof);
     Double_t GetAoverq(Double_t brho, Double_t vel);
@@ -95,6 +97,7 @@ class R3BAnalysisTrackerFragment : public FairTask
     R3BTGeoPar* fMwpc0GeoPar;
 
     TClonesArray* fHitItemsMus;
+    TClonesArray* fPointItemsMus;
     TClonesArray* fHitItemsFib10;
     TClonesArray* fHitItemsFib11;
     TClonesArray* fHitItemsFib12;
@@ -105,7 +108,7 @@ class R3BAnalysisTrackerFragment : public FairTask
 
     Float_t music_ang = 0.; Float_t music_z = 0.;
     // Private method TrackingData
-    R3BSofTrackingData* AddData(Double_t z, Double_t aq, Double_t beta, Double_t length, Double_t brho, Int_t paddle);
+    R3BSofTrackingData* AddData(Double_t z, Double_t aq, Double_t beta, Double_t length, Double_t length_fib, Double_t brho, Int_t paddle);
 
   public:
     // Class definition

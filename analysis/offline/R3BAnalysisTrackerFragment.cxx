@@ -36,6 +36,7 @@
 #include "R3BSofGladFieldPar.h"
 #include "R3BSofTrackingData.h"
 #include "R3BTGeoPar.h"
+#include "R3BMusicPoint.h"
 
 #include "TClonesArray.h"
 #include "TMath.h"
@@ -51,6 +52,7 @@ R3BAnalysisTrackerFragment::R3BAnalysisTrackerFragment(const TString& name, Int_
     : FairTask(name, iVerbose)
     , fHeader(NULL)
     , fHitItemsMus(NULL)
+    , fPointItemsMus(NULL)
     , fHitItemsLos(NULL)
     , fHitItemsFib10(NULL)
     , fHitItemsFib11(NULL)
@@ -168,6 +170,9 @@ InitStatus R3BAnalysisTrackerFragment::Init()
     fHitItemsMus = (TClonesArray*)mgr->GetObject("MusicHitData");
     R3BLOG_IF(WARNING, !fHitItemsMus, "MusicHitData not found");
 
+    fPointItemsMus = (TClonesArray*)mgr->GetObject("MusicPoint");
+    R3BLOG_IF(WARNING, !fPointItemsMus, "MusicPoint not found");
+
     // // Get access to hit data of the LOS
     // fHitItemsLos = (TClonesArray*)mgr->GetObject("LosHit");
     // R3BLOG_IF(WARNING, !fHitItemsLos, "LosHit not found");
@@ -212,11 +217,12 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
 {
   // Reset entries in output arrays, local arrays
   Reset();
-  Int_t nHitMusic = fHitItemsMus->GetEntries();
-  Int_t nHitFib10 = fHitItemsFib10->GetEntries();
-  Int_t nHitFib11 = fHitItemsFib11->GetEntries();
-  Int_t nHitFib12 = fHitItemsFib12->GetEntries();
-  Int_t nHitTofD = fHitItemsTofd->GetEntries();
+  Int_t nHitMusic = fHitItemsMus->GetEntriesFast();
+  Int_t nHitFib10 = fHitItemsFib10->GetEntriesFast();
+  Int_t nHitFib11 = fHitItemsFib11->GetEntriesFast();
+  Int_t nHitFib12 = fHitItemsFib12->GetEntriesFast();
+  Int_t nHitTofD = fHitItemsTofd->GetEntriesFast();
+  Int_t nPointMusic = fPointItemsMus->GetEntriesFast();
 
   if (nHitMusic == 0 || nHitTofD == 0 || nHitFib10 == 0 || nHitFib11 == 0 || nHitFib12 == 0)
       return;
@@ -228,16 +234,18 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
   pos2[0].SetXYZ(-100., 0., 0.);
   pos2[1].SetXYZ(-100., 0., 0.);
   TVector3 pos3[2];
-  pos3[0].SetXYZ(-1000., 0., 0.);
-  pos3[1].SetXYZ(-1000., 0., 0.);
+  pos3[0].SetXYZ(0., 0., 0.);
+  pos3[1].SetXYZ(0., 0., 0.);
 
   Double_t Length = 0.; Double_t Brho = 0.;
+  Double_t Length_fib = 0.;
 
   Float_t tofd_x = 0.; Float_t tofd_y = 0.;
   Float_t tof = 0.;
   Float_t fib10_x = 0.; Float_t fib10_y = 0.;
   Float_t fib11_x = 0.; Float_t fib11_y = 0.;
   Float_t fib12_x = 0.; Float_t fib12_y = 0.;
+  Float_t x_mus = 0.;
 
 
   for (Int_t ihit = 0; ihit < nHitMusic; ihit++)
@@ -247,6 +255,15 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
           continue;
       music_ang = hit->GetTheta(); // mrad
       music_z = hit->GetZcharge();
+  }
+
+  for (Int_t ihit = 0; ihit < nPointMusic; ihit++)
+  {
+      auto hit = (R3BMusicPoint*)fPointItemsMus->At(ihit);
+      if (!hit)
+          continue;
+      x_mus = hit->GetXIn();
+
   }
 
   for (Int_t ihit = 0; ihit < nHitTofD; ihit++)
@@ -280,13 +297,17 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
       fib12_x = hit->GetX(); fib12_y = hit->GetY();
   }
 
-  Length = GetLength(pos1[1].X() / 10., pos2[1].X() / 10., fib10_x/10.);
+
+  Length = GetLength(x_mus/ 10., fib11_x / 10., fib10_x/10.);
+  Length_fib = GetLength_fib(x_mus/ 10., fib11_x / 10., fib10_x/10.);
   Brho = GetBrho(pos1[1].X() / 10., pos2[1].X() / 10., fib10_x/10.);
 
   Double_t v = Length / tof / c;
   Double_t gamma = 1. / sqrt(1. - v * v);
 
-  AddData(music_z, Brho / v / gamma / 3.107, v, Length, Brho, 0);
+  //std::cout << Length << " " << Length_fib << std::endl;
+
+  AddData(music_z, Brho / v / gamma / 3.107, v, Length, Length_fib, Brho, 0);
 }
 
 
@@ -395,8 +416,9 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     auto pos3 = pos2 - posc;
 
     Double_t eta = atan(pos3.X() / pos3.Z());
+    //Double_t eta = atan((position2-position3)/9662.0)+beta;
 
-    // std::cout<<eta<<std::endl;
+    //std::cout<<eta<< " "<< eta_fib << std::endl;
 
     Double_t xd = xc + L / 2. * sin(eta) / cos(eta - alpha);
     Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
@@ -411,21 +433,100 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     TVector3 posf = { xf, 0., zf };
 
     // std::cout<<"f: "<<xf<<" "<<zf<<std::endl;
-
     // double rho = -0.5*L/sin((eta-theta)/2.0)/cos(alpha-(theta+eta)/2.0);
 
     Double_t rho = 0.5 * L / sin((theta - eta) / 2.0);
 
     // double omega = 2.0/sin(sqrt( (posd.Z()-posb.Z())*(posd.Z()-posb.Z()) + (posd.X()-posb.X())*(posd.X()-posb.X())
     // )/2.0/rho);
-
     //std::cout << "rho from GetLength " << rho/100 << std::endl;
+
     Double_t omega =
         2.0 * asin(sqrt((posd.Z() - posb.Z()) * (posd.Z() - posb.Z()) + (posd.X() - posb.X()) * (posd.X() - posb.X())) /
                    2.0 / rho);
 
-    // d=98.75cm is the distance from Fi10 to ToFD in s515
-    length = (zb - fTargetGeoPar->GetPosZ()) / cos(theta) + omega * rho + (posf.Z() - posd.Z()) / cos(-eta) + 98.75;
+
+    length = (zb - fTargetGeoPar->GetPosZ()) / cos(theta) + omega*rho + (posf.Z() - posd.Z()) / cos(-eta);
+
+    // std::cout<<mw2<<" "<<mw3<<" "<< rho <<" "<<omega <<" "<<omega*rho <<" "<<(posd-posb).Mag()<<" "<<
+    // fTargetGeoPar->GetPosZ()<<" "<<length<<std::endl;
+
+    return length; // [cm]
+}
+
+Double_t R3BAnalysisTrackerFragment::GetLength_fib(Double_t position1, Double_t position2, Double_t position3)
+{
+    Double_t length = 0.;
+    Double_t L = fEffLength; // cm
+    Double_t alpha = -14. * TMath::DegToRad();
+    Double_t beta = -18. * TMath::DegToRad();
+
+    //Double_t theta = atan((pos2 - pos1) / (fMw2GeoPar->GetPosZ() - fMwpc0GeoPar->GetPosZ()));
+    Double_t theta = music_ang;
+
+    // std::cout<<mw1<<" "<<mw2<<" "<<fMwpc0GeoPar->GetPosZ()<<" "<<fMw2GeoPar->GetPosZ()<<std::endl;
+    // std::cout<<alpha<<" "<<theta<<std::endl;
+
+    Double_t xc = 1. / (1. + tan(alpha) * tan(theta)) * (position1 + (fFieldCentre - fMusicGeoPar->GetPosZ()) * tan(theta));
+    Double_t zc = fFieldCentre - xc * tan(alpha);
+
+    TVector3 posc = { xc, 0., zc };
+
+    // std::cout<<"c: "<<xc<<" "<<zc<<std::endl;
+
+    Double_t xb = xc - L / 2. * sin(theta) / cos(theta - alpha);
+    Double_t zb = zc - L / 2. * cos(theta) / cos(theta - alpha);
+
+    TVector3 posb = { xb, 0., zb };
+
+    // std::cout<<"b: "<<xb<<" "<<zb<<std::endl;
+
+    TVector3 ftrans = { fFib10GeoPar->GetPosX(), fFib10GeoPar->GetPosY(), fFib10GeoPar->GetPosZ() };
+    TRotation frot;
+    frot.RotateX(-1. * fFib10GeoPar->GetRotX() * TMath::DegToRad());
+    frot.RotateY(-1. * fFib10GeoPar->GetRotY() * TMath::DegToRad());
+    frot.RotateZ(-1. * fFib10GeoPar->GetRotZ() * TMath::DegToRad());
+    TVector3 pos;
+    pos.SetXYZ(position3, 0., 0.);
+
+    auto pos2 = frot * pos + ftrans;
+
+    // std::cout<<"E: "<<pos2.X()<<" "<<pos2.Y()<<" "<<pos2.Z()<<std::endl;
+
+    auto pos3 = pos2 - posc;
+
+    //Double_t eta = atan(pos3.X() / pos3.Z());
+    Double_t eta = atan((position2-position3)/9662.0)+beta;
+
+    //std::cout<<eta<< " "<< eta_fib << std::endl;
+
+    Double_t xd = xc + L / 2. * sin(eta) / cos(eta - alpha);
+    Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
+
+    TVector3 posd = { xd, 0., zd };
+
+    // std::cout<<"d: "<<xd<<" "<<zd<<std::endl;
+
+    Double_t xf = pos2.X() + (fTofDGeoPar->GetPosZ() - fFib10GeoPar->GetPosZ()) * sin(eta) / cos(eta - beta);
+    Double_t zf = pos2.Z() + (fTofDGeoPar->GetPosZ() - fFib10GeoPar->GetPosZ()) * cos(eta) / cos(eta - beta);
+
+    TVector3 posf = { xf, 0., zf };
+
+    // std::cout<<"f: "<<xf<<" "<<zf<<std::endl;
+    // double rho = -0.5*L/sin((eta-theta)/2.0)/cos(alpha-(theta+eta)/2.0);
+
+    Double_t rho = 0.5 * L / sin((theta - eta) / 2.0);
+
+    // double omega = 2.0/sin(sqrt( (posd.Z()-posb.Z())*(posd.Z()-posb.Z()) + (posd.X()-posb.X())*(posd.X()-posb.X())
+    // )/2.0/rho);
+    //std::cout << "rho from GetLength " << rho/100 << std::endl;
+
+    Double_t omega =
+        2.0 * asin(sqrt((posd.Z() - posb.Z()) * (posd.Z() - posb.Z()) + (posd.X() - posb.X()) * (posd.X() - posb.X())) /
+                   2.0 / rho);
+
+
+    length = (zb - fTargetGeoPar->GetPosZ()) / cos(theta) + omega*rho + (posf.Z() - posd.Z()) / cos(-eta);
 
     // std::cout<<mw2<<" "<<mw3<<" "<< rho <<" "<<omega <<" "<<omega*rho <<" "<<(posd-posb).Mag()<<" "<<
     // fTargetGeoPar->GetPosZ()<<" "<<length<<std::endl;
@@ -460,13 +561,14 @@ R3BSofTrackingData* R3BAnalysisTrackerFragment::AddData(Double_t z,
                                                    Double_t aq,
                                                    Double_t beta,
                                                    Double_t length,
+                                                   Double_t length_fib,
                                                    Double_t brho,
                                                    Int_t paddle)
 {
     // It fills the R3BSofTrackingData
     TClonesArray& clref = *fTrackingDataCA;
     Int_t size = clref.GetEntriesFast();
-    return new (clref[size]) R3BSofTrackingData(z, aq, beta, length, brho, paddle);
+    return new (clref[size]) R3BSofTrackingData(z, aq, beta, length, length_fib, brho, paddle);
 }
 
 ClassImp(R3BAnalysisTrackerFragment);
