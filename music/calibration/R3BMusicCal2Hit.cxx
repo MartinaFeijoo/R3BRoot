@@ -260,7 +260,7 @@ void R3BMusicCal2Hit::Exec(Option_t*)
         Double_t Esum_nba_rot = sqrtEsum_nba_rot * sqrtEsum_nba_rot;
         Double_t zhit = fZ0 + fZ1 * sqrtEsum_nba_rot + fZ2 * Esum_nba_rot;
         if (zhit > 0)
-            AddHitData(theta, zhit, Esum_nba_rot);
+            AddHitData(theta, zhit, Esum_nba_rot, good_dt[3]);
     }
     if (CalDat)
         delete[] CalDat;
