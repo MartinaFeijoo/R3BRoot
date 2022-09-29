@@ -42,34 +42,45 @@ R3BIonGenerator::R3BIonGenerator(const Char_t* ionName, Int_t mult, Double_t mom
     : fMult(mult)
     , fIon(nullptr)
     , fRNG(seed)
+    , fMomentum_AGeV_per_c(momentum_AGeV_per_c)
+    , fThetaMin(0)
+    , fThetaMax(0)
+    , fPMin(0)
+    , fPMax(0)
+    , fX(0)
+    , fY(0)
+    , fZ(0)
+    , fIsThetaRangeSet(0)
+    , fIsPRangeSet(0)
+    , fIsXYZSet(0)
 {
     fIon = dynamic_cast<FairIon*>(FairRunSim::Instance()->GetUserDefIons()->FindObject(ionName));
 
     if (!fIon)
         LOG(fatal) << "R3BIonGenerator: Ion is not defined!";
-
-    const auto mass = fIon->GetMass();
-    const auto totalMomentum_GeV_per_c = fIon->GetA() * momentum_AGeV_per_c;
-    const auto beta = momentum_AGeV_per_c / sqrt(mass * mass + totalMomentum_GeV_per_c * totalMomentum_GeV_per_c);
-    Beam.SetBetaDistribution(R3BDistribution1D::Delta(beta));
 }
 
 R3BIonGenerator::R3BIonGenerator(Int_t z, Int_t a, Int_t q, Int_t mult, Double_t momentum_AGeV_per_c, UInt_t seed)
     : fMult(mult)
     , fIon(NULL)
     , fRNG(seed)
+    , fMomentum_AGeV_per_c(momentum_AGeV_per_c)
+    , fThetaMin(0)
+    , fThetaMax(0)
+    , fPMin(0)
+    , fPMax(0)
+    , fX(0)
+    , fY(0)
+    , fZ(0)
+    , fIsThetaRangeSet(0)
+    , fIsPRangeSet(0)
+    , fIsXYZSet(0)
 {
     fIon = new FairIon(TString::Format("FairIon_%d_%d_%d", z, a, q), z, a, q);
 
     auto run = FairRunSim::Instance();
     if (!run)
         LOG(fatal) << "FairIonGenerator: No FairRun instantised!";
-
-    const auto mass = fIon->GetMass();
-    const auto totalMomentum_GeV_per_c = fIon->GetA() * momentum_AGeV_per_c;
-    const auto beta = momentum_AGeV_per_c / sqrt(mass * mass + totalMomentum_GeV_per_c * totalMomentum_GeV_per_c);
-    Beam.SetBetaDistribution(R3BDistribution1D::Delta(beta));
-
     run->AddNewIon(fIon);
 }
 
@@ -101,15 +112,45 @@ Bool_t R3BIonGenerator::ReadEvent(FairPrimaryGenerator* primGen)
     TParticlePDG* thisPart = TDatabasePDG::Instance()->GetParticle(fIon->GetName());
     const auto pdgCode = thisPart->PdgCode();
 
-    const auto vertex_cm = Beam.GetVertexDistribution().GetRandomValues({ fRNG.Rndm(), fRNG.Rndm(), fRNG.Rndm() });
-    const auto theta_phi_mRad = Beam.GetSpreadDistribution().GetRandomValues({ fRNG.Rndm(), fRNG.Rndm() });
-    const auto beamBeta = Beam.GetBetaDistribution().GetRandomValues({ fRNG.Rndm() })[0];
+    TVector3 vertex_cm;
+    Double_t theta; Double_t phi;
+    Double_t totalMomentum_GeV_per_c; Double_t beta;
+    Double_t mass = fIon->GetMass();
+
+    if (fIsPRangeSet)
+      totalMomentum_GeV_per_c = fIon->GetA() * gRandom->Uniform(fPMin, fPMax);
+    else
+      totalMomentum_GeV_per_c = fIon->GetA() * fMomentum_AGeV_per_c;
+
+    if (fIsXYZSet)
+    {
+      vertex_cm.SetX(fX);
+      vertex_cm.SetY(fY);
+      vertex_cm.SetZ(fZ);
+    }
+    else
+    {
+      vertex_cm.SetX(Beam.GetVertexDistribution().GetRandomValues({ fRNG.Rndm() })[0]);
+      vertex_cm.SetY(Beam.GetVertexDistribution().GetRandomValues({ fRNG.Rndm() })[1]);
+      vertex_cm.SetZ(Beam.GetVertexDistribution().GetRandomValues({ fRNG.Rndm() })[2]);
+    }
+
+    if (fIsThetaRangeSet)
+      theta = gRandom->Uniform(fThetaMin*TMath::DegToRad(), fThetaMax*TMath::DegToRad());
+    else
+      theta = Beam.GetSpreadDistribution().GetRandomValues({fRNG.Rndm() })[0];
+
+    beta = totalMomentum_GeV_per_c/fIon->GetA() / sqrt(mass * mass + totalMomentum_GeV_per_c * totalMomentum_GeV_per_c);
+    Beam.SetBetaDistribution(R3BDistribution1D::Delta(beta));
+
+    phi = Beam.GetSpreadDistribution().GetRandomValues({fRNG.Rndm() })[1];
+    auto beamBeta = Beam.GetBetaDistribution().GetRandomValues({ fRNG.Rndm() })[0];
 
     const auto beamGamma = 1. / sqrt(1. - beamBeta * beamBeta);
 
     TVector3 momentum(0., 0., beamBeta * beamGamma * fIon->GetMass());
-    momentum.RotateX(theta_phi_mRad[0] * 1e-3);
-    momentum.RotateZ(theta_phi_mRad[1] * 1e-3);
+    momentum.RotateX(theta * 1e-3);
+    momentum.RotateZ(phi * 1e-3);
 
     const auto totalEnergy = sqrt(momentum.Mag() * momentum.Mag() + fIon->GetMass() * fIon->GetMass());
 

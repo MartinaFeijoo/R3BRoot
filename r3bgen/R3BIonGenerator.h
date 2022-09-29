@@ -76,6 +76,28 @@ class R3BIonGenerator : public FairGenerator
     void SetExcitationEnergy(Double_t eExc);
     void SetMass(Double_t mass);
 
+    void SetMomentumDistribution(Double_t pmin, Double_t pmax)
+    {
+        fPMin = pmin;
+        fPMax = pmax;
+        fIsPRangeSet = kTRUE;
+    }
+
+    void SetThetaRange(Double_t thetamin, Double_t thetamax)
+    {
+        fThetaMin = thetamin;
+        fThetaMax = thetamax;
+        fIsThetaRangeSet = kTRUE;
+    }
+
+    void SetXYZ(Double_t x, Double_t y, Double_t z)
+    {
+      fX = x;
+      fY = y;
+      fZ = z;
+      fIsXYZSet = kTRUE;
+    }
+
     Bool_t Init() override;
 
     /** Method ReadEvent
@@ -89,6 +111,12 @@ class R3BIonGenerator : public FairGenerator
   private:
     Int_t fMult;   // Multiplicity per event
     FairIon* fIon; // Pointer to the FairIon to be generated
+
+    Double_t fMomentum_AGeV_per_c;
+    Double_t fThetaMax; Double_t fThetaMin;
+    Double_t fPMax; Double_t fPMin;
+    Bool_t fIsXYZSet; Bool_t fIsPRangeSet; Bool_t fIsThetaRangeSet;
+    Double_t fX, fY, fZ;
 
     TRandom3 fRNG; // the RNG
     ClassDefOverride(R3BIonGenerator, 1)
