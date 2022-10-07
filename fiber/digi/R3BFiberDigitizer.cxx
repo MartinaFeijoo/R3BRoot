@@ -86,9 +86,9 @@ void R3BFiberDigitizer::SetParameter()
     {
         ysigma = fFiGeoPar->GetSigmaY();
         xsigma = fFiGeoPar->GetSigmaX();
-        fRot.RotateX(-fFiGeoPar->GetRotX() * TMath::DegToRad());
+        //fRot.RotateX(-fFiGeoPar->GetRotX() * TMath::DegToRad());
         fRot.RotateY(-fFiGeoPar->GetRotY() * TMath::DegToRad());
-        fRot.RotateZ(-fFiGeoPar->GetRotZ() * TMath::DegToRad());
+        //fRot.RotateZ(-fFiGeoPar->GetRotZ() * TMath::DegToRad());
 
         fTrans.SetXYZ(fFiGeoPar->GetPosX(), fFiGeoPar->GetPosY(), fFiGeoPar->GetPosZ());
     }
@@ -149,8 +149,8 @@ void R3BFiberDigitizer::Exec(Option_t* opt)
             z = (pointData[i]->GetZIn() + pointData[i]->GetZOut()) / 2.;
             vpos.SetXYZ(x, y, z);
 
-            // vpos = fRot * (vpos - fTrans);
-            vpos = (vpos - fTrans);
+            vpos = fRot * (vpos - fTrans);
+            // vpos = (vpos - fTrans);
             // vpos = fRot * (vpos);
             time = pointData[i]->GetTime() + rand->Gaus(0., tsigma);
 

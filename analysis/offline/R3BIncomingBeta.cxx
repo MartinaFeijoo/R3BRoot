@@ -274,19 +274,31 @@ void R3BIncomingBeta::Exec(Option_t* option)
             Int_t num_tof_candidates = 0;
             for (Int_t i_2 = 0; i_2 < multSci2[i]; i_2++)
             {
+                if (num_tof_candidates > 0)
+                    break;
+                ToFraw_m1 = fTimeStitch->GetTime(timeLosV[i][i_L] - TimeSci2_m1[i][i_2], "vftx", "vftx");
+
+                if (ToFraw_m1 > 0. && fHeader->GetExpId() == 515)
+                    ToFraw_m1 = ToFraw_m1 - 40960.;
+
+                ToFrawwTref_m1 = fTimeStitch->GetTime(fHeader->GetTStart() - TimeSci2wTref_m1[i][i_2], "vftx", "vftx");
+
+                VelowTref_m1 = 1. / (fTof2InvV_p0->GetAt(i) +
+                                     fTof2InvV_p1->GetAt(i) * (fToFoffset->GetAt(i) + ToFrawwTref_m1)); // [m/ns]
+
                 if (fUseTref)
                 {
                     ToFraw_m1 = fTimeStitch->GetTime(fHeader->GetTStart() - TimeSci2wTref_m1[i][i_2], "vftx", "vftx");
                 }
                 else
                 {
-                    ToFraw_m1 = fTimeStitch->GetTime(timeLosV[i][i_L] - TimeSci2_m1[i][i_2], "vftx", "vftx");
-                    if (ToFraw_m1 > 0. && fHeader->GetExpId() == 515)
-                        ToFraw_m1 = ToFraw_m1 - 40960.;
+                  if (ToFraw_m1 > 0)
+                    ToFraw_m1 = ToFraw_m1 - 40960.;
+
+                  Velo_m1 = 1. / (fTof2InvV_p0->GetAt(i) +
+                            fTof2InvV_p1->GetAt(i) * (fToFoffset->GetAt(i) + ToFraw_m1)); // [m/ns]
+                  Beta_m1 = Velo_m1 / 0.299792458;
                 }
-                Velo_m1 = 1. / (fTof2InvV_p0->GetAt(i) +
-                                fTof2InvV_p1->GetAt(i) * (fToFoffset->GetAt(i) + ToFraw_m1)); // [m/ns]
-                Beta_m1 = Velo_m1 / (TMath::C() / pow(10, 9));
 
                 // Select good ToF hit with gating beta
                 if (Beta_m1 < fBeta_max && Beta_m1 > fBeta_min)

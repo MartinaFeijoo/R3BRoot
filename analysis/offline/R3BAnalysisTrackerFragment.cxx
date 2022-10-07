@@ -337,9 +337,9 @@ Double_t R3BAnalysisTrackerFragment::GetBrho(Double_t position1, Double_t positi
 
     TVector3 ftrans = { fFib10GeoPar->GetPosX(), fFib10GeoPar->GetPosY(), fFib10GeoPar->GetPosZ() };
     TRotation frot;
-    frot.RotateX(-1. * fFib10GeoPar->GetRotX() * TMath::DegToRad());
+    //frot.RotateX(-1. * fFib10GeoPar->GetRotX() * TMath::DegToRad());
     frot.RotateY(-1. * fFib10GeoPar->GetRotY() * TMath::DegToRad());
-    frot.RotateZ(-1. * fFib10GeoPar->GetRotZ() * TMath::DegToRad());
+    //frot.RotateZ(-1. * fFib10GeoPar->GetRotZ() * TMath::DegToRad());
 
     TVector3 pos;
     pos.SetXYZ(position3, 0., 0.);
@@ -405,9 +405,9 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
 
     TVector3 ftrans = { fFib10GeoPar->GetPosX(), fFib10GeoPar->GetPosY(), fFib10GeoPar->GetPosZ() };
     TRotation frot;
-    frot.RotateX(-1. * fFib10GeoPar->GetRotX() * TMath::DegToRad());
+    //frot.RotateX(-1. * fFib10GeoPar->GetRotX() * TMath::DegToRad());
     frot.RotateY(-1. * fFib10GeoPar->GetRotY() * TMath::DegToRad());
-    frot.RotateZ(-1. * fFib10GeoPar->GetRotZ() * TMath::DegToRad());
+    //frot.RotateZ(-1. * fFib10GeoPar->GetRotZ() * TMath::DegToRad());
     TVector3 pos;
     pos.SetXYZ(position3, 0., 0.);
 
@@ -484,9 +484,9 @@ Double_t R3BAnalysisTrackerFragment::GetLength_fib(Double_t position1, Double_t 
 
     TVector3 ftrans = { fFib11GeoPar->GetPosX(), fFib11GeoPar->GetPosY(), fFib11GeoPar->GetPosZ() };
     TRotation frot;
-    frot.RotateX(-1. * fFib11GeoPar->GetRotX() * TMath::DegToRad());
+    //frot.RotateX(-1. * fFib11GeoPar->GetRotX() * TMath::DegToRad());
     frot.RotateY(-1. * fFib11GeoPar->GetRotY() * TMath::DegToRad());
-    frot.RotateZ(-1. * fFib11GeoPar->GetRotZ() * TMath::DegToRad());
+    //frot.RotateZ(-1. * fFib11GeoPar->GetRotZ() * TMath::DegToRad());
     TVector3 pos;
     pos.SetXYZ(position2, 0., 0.);
 
