@@ -151,7 +151,7 @@ void R3BAnalysisTrackerFragment::SetParameter()
     // fEffLength = fGladPar->GetEffectiveLength();
     // fBfield_Glad = fGladPar->GetMagneticField();
 
-    fFieldCentre = 308.;
+    fFieldCentre = 271.4;
     fEffLength =  210.;
     fBfield_Glad = 2.155;
     return;
@@ -299,12 +299,12 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
   }
 
 
-  Length = GetLength(x_mus/ 10., fib11_x / 10., fib10_x/10.);
-  Length_fib = GetLength_fib(x_mus/ 10., fib11_x / 10., fib10_x/10.);
-  Brho = GetBrho(pos1[1].X() / 10., pos2[1].X() / 10., fib10_x/10.);
+  Length = GetLength(x_mus/10., fib11_x/10., fib10_x/10.);
+  Length_fib = GetLength_fib(x_mus/ 10., fib11_x/10., fib10_x/10.);
+  Brho = GetBrho(pos1[1].X()/10., pos2[1].X()/10., fib10_x/10.);
 
-  Double_t v = Length / tof / c;
-  Double_t gamma = 1. / sqrt(1. - v * v);
+  Double_t v = Length_fib / tof / c;
+  Double_t gamma = 1. / sqrt(1. - v*v);
 
   //std::cout << Length << " " << Length_fib << std::endl;
 
@@ -462,25 +462,16 @@ Double_t R3BAnalysisTrackerFragment::GetLength_fib(Double_t position1, Double_t 
     Double_t L = fEffLength; // cm
     Double_t alpha = -14. * TMath::DegToRad();
     Double_t beta = -18. * TMath::DegToRad();
-
-    //Double_t theta = atan((pos2 - pos1) / (fMw2GeoPar->GetPosZ() - fMwpc0GeoPar->GetPosZ()));
     Double_t theta = music_ang;
 
-    // std::cout<<mw1<<" "<<mw2<<" "<<fMwpc0GeoPar->GetPosZ()<<" "<<fMw2GeoPar->GetPosZ()<<std::endl;
-    // std::cout<<alpha<<" "<<theta<<std::endl;
-
-    Double_t xc = 1. / (1. + tan(alpha) * tan(theta)) * (position1 + (fFieldCentre - fMusicGeoPar->GetPosZ()) * tan(theta));
+    Double_t xc = 1. / (1.+tan(alpha)*tan(theta)) * (position1 + (fFieldCentre - fMusicGeoPar->GetPosZ()) * tan(theta));
     Double_t zc = fFieldCentre - xc * tan(alpha);
-
     TVector3 posc = { xc, 0., zc };
-
     // std::cout<<"c: "<<xc<<" "<<zc<<std::endl;
 
-    Double_t xb = xc - L / 2. * sin(theta) / cos(theta - alpha);
-    Double_t zb = zc - L / 2. * cos(theta) / cos(theta - alpha);
-
+    Double_t xb = xc - L/2. * sin(theta) / cos(theta - alpha);
+    Double_t zb = zc - L/2. * cos(theta) / cos(theta - alpha);
     TVector3 posb = { xb, 0., zb };
-
 
     TVector3 ftrans = { fFib11GeoPar->GetPosX(), fFib11GeoPar->GetPosY(), fFib11GeoPar->GetPosZ() };
     TRotation frot;
@@ -491,18 +482,16 @@ Double_t R3BAnalysisTrackerFragment::GetLength_fib(Double_t position1, Double_t 
     pos.SetXYZ(position2, 0., 0.);
 
     auto pos2 = frot * pos + ftrans;
+    //std::cout<<"E: "<<pos2.X()<<" "<<pos2.Y()<<" "<<pos2.Z()<<std::endl;
+    // auto pos3 = pos2 - posc;
+    // Double_t eta = atan(pos3.X() / pos3.Z()) - theta;
 
-    // std::cout<<"E: "<<pos2.X()<<" "<<pos2.Y()<<" "<<pos2.Z()<<std::endl;
+    Double_t eta = atan((position2-position3)/9662.0) + beta;
 
-    auto pos3 = pos2 - posc;
+    // std::cout<<eta<< " "<< eta_fib << std::endl;
 
-    //Double_t eta = atan(pos3.X() / pos3.Z());
-    Double_t eta = atan((position2-position3)/9662.0)+beta;
-
-    //std::cout<<eta<< " "<< eta_fib << std::endl;
-
-    Double_t xd = xc + L / 2. * sin(eta) / cos(eta - alpha);
-    Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
+    Double_t xd = xc + L/2. * sin(eta) / cos(eta - alpha);
+    Double_t zd = zc + L/2. * cos(eta) / cos(eta - alpha);
 
     TVector3 posd = { xd, 0., zd };
 
@@ -519,21 +508,17 @@ Double_t R3BAnalysisTrackerFragment::GetLength_fib(Double_t position1, Double_t 
 
     Double_t rho = abs(0.5*L/sin((eta-theta)/2.0)/cos(alpha-(theta+eta)/2.0));
 
-    //Double_t rho = 0.5 * L / sin((theta - eta) / 2.0);
-
     // double omega = 2.0/sin(sqrt( (posd.Z()-posb.Z())*(posd.Z()-posb.Z()) + (posd.X()-posb.X())*(posd.X()-posb.X())
     // )/2.0/rho);
     //std::cout << "rho from GetLength " << rho/100 << std::endl;
 
     Double_t omega =
-        abs(2.0 * asin(sqrt((posd.Z() - posb.Z()) * (posd.Z() - posb.Z()) + (posd.X() - posb.X()) * (posd.X() - posb.X())) /
-                   2.0 / rho));
+        abs(2.0*asin(sqrt((posd.Z()-posb.Z())*(posd.Z()-posb.Z()) + (posd.X()-posb.X())*(posd.X()-posb.X()))/(2.0*rho)));
 
 
-    length = (zb - fTargetGeoPar->GetPosZ()) / cos(theta) + omega*rho + (posf.Z() - posd.Z()) / cos(eta);
+    length = (zb-fTargetGeoPar->GetPosZ()) / cos(theta) + omega*rho + (posf.Z()-posd.Z()) / cos(eta);
 
     //std::cout << (zb - fTargetGeoPar->GetPosZ()) / cos(theta) << " " << omega*rho << " " << (posf.Z() - posd.Z()) / cos(eta) << std::endl;
-
     // std::cout<<mw2<<" "<<mw3<<" "<< rho <<" "<<omega <<" "<<omega*rho <<" "<<(posd-posb).Mag()<<" "<<
     // fTargetGeoPar->GetPosZ()<<" "<<length<<std::endl;
 
