@@ -77,13 +77,13 @@ ${R3BROOT_SOURCE_DIR}/r3bdata/footData
 ${R3BROOT_SOURCE_DIR}/r3bdata/rpcData
 ${R3BROOT_SOURCE_DIR}/r3bdata/wrData
 ${R3BROOT_SOURCE_DIR}/r3bdata/synccheckData
+${R3BROOT_SOURCE_DIR}/r3bdata/trackerData
 ${R3BROOT_SOURCE_DIR}/tracker_rene
 ${R3BROOT_SOURCE_DIR}/analysis
 ${R3BROOT_SOURCE_DIR}/analysis/pars
 ${R3BROOT_SOURCE_DIR}/analysis/offline
 ${R3BROOT_SOURCE_DIR}/analysis/online
 ${R3BROOT_SOURCE_DIR}/sofia/sofana/
-${R3BROOT_SOURCE_DIR}/sofia/sofdata/trackingData
 )
 
 include_directories( ${INCLUDE_DIRECTORIES})

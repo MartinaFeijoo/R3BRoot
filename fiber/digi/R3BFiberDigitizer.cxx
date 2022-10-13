@@ -87,7 +87,7 @@ void R3BFiberDigitizer::SetParameter()
         ysigma = fFiGeoPar->GetSigmaY();
         xsigma = fFiGeoPar->GetSigmaX();
         //fRot.RotateX(-fFiGeoPar->GetRotX() * TMath::DegToRad());
-        fRot.RotateY(-fFiGeoPar->GetRotY() * TMath::DegToRad());
+        fRot.RotateY(fFiGeoPar->GetRotY() * TMath::DegToRad());
         //fRot.RotateZ(-fFiGeoPar->GetRotZ() * TMath::DegToRad());
 
         fTrans.SetXYZ(fFiGeoPar->GetPosX(), fFiGeoPar->GetPosY(), fFiGeoPar->GetPosZ());

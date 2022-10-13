@@ -20,7 +20,7 @@
 #define R3BMusicDigitizer_H 1
 
 #include "FairTask.h"
-#include "R3BMusicCalData.h"
+#include "R3BMusicHitData.h"
 #include <Rtypes.h>
 #include <string>
 
@@ -58,10 +58,12 @@ class R3BMusicDigitizer : public FairTask
     double fSigmaX;
     TClonesArray* fMCTrack;
     TClonesArray* fMusicPoints;
-    TClonesArray* fMusicCal;
+    TClonesArray* fMusicHit;
+    Float_t fsigma_x;
+    TString fName;
 
     // Add a MusicCalData to the HitCollection
-    R3BMusicCalData* AddHitData(int anodeId, double pos, double e);
+    R3BMusicHitData* AddHitData(Double_t theta, Double_t z, Double_t ene, Double_t good_dt);
 
   public:
     // Class definition

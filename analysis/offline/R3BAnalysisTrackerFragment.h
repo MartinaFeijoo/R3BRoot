@@ -13,6 +13,7 @@
 #include "TH1F.h"
 #include "TMath.h"
 #include "TRandom.h"
+#include "TGraph.h"
 #include "TRotation.h"
 #include "TVector3.h"
 #include <TRandom.h>
@@ -25,7 +26,7 @@
 #include "FairRuntimeDb.h"
 #include "FairTask.h"
 
-#include "R3BSofTrackingData.h"
+#include "R3BFragmentData.h"
 
 
 class TClonesArray;
@@ -76,11 +77,12 @@ class R3BAnalysisTrackerFragment : public FairTask
 
   private:
     void SetParameter();
-    Double_t GetLength(Double_t mw1, Double_t mw2, Double_t mw3);
-    Double_t GetLength_fib(Double_t mw1, Double_t mw2, Double_t mw3);
-    Double_t GetBrho(Double_t mw1, Double_t mw2, Double_t mw3);
+    Double_t GetLength(Double_t pos1, Double_t pos2, Double_t pos3, Double_t theta);
+    Double_t GetBrho(Double_t pos1, Double_t pos2, Double_t pos3, Double_t theta);
     Double_t GetVelocity(Double_t len, Double_t tof);
     Double_t GetAoverq(Double_t brho, Double_t vel);
+
+
 
     Bool_t fOnline; // Don't store data for online
 
@@ -94,7 +96,7 @@ class R3BAnalysisTrackerFragment : public FairTask
     R3BTGeoPar* fFib10GeoPar;
     R3BTGeoPar* fFib11GeoPar;
     R3BTGeoPar* fFib12GeoPar;
-    R3BTGeoPar* fMwpc0GeoPar;
+    R3BTGeoPar* fpospc0GeoPar;
 
     TClonesArray* fHitItemsMus;
     TClonesArray* fPointItemsMus;
@@ -108,7 +110,10 @@ class R3BAnalysisTrackerFragment : public FairTask
 
     Float_t music_ang = 0.; Float_t music_z = 0.;
     // Private method TrackingData
-    R3BSofTrackingData* AddData(Double_t z, Double_t aq, Double_t beta, Double_t length, Double_t length_fib, Double_t brho, Int_t paddle);
+    R3BFragmentData* AddData(Double_t z, Double_t aq, Double_t beta, Double_t length, Double_t brho);
+    
+
+
 
   public:
     // Class definition
