@@ -302,7 +302,36 @@ Double_t R3BAnalysisTrackerFragment::GetBrho(Double_t position1, Double_t positi
 
     Double_t eta = atan((position3-position2)/9662.0) + beta;
 
-    Double_t rho = abs(0.5*L/sin((eta-theta)/2.0)/cos(alpha-(theta+eta)/2.0));
+    Double_t xc = 1. / (1.+tan(alpha)*tan(theta)) * (position1 + (fFieldCentre - 63.2) * tan(theta));
+    Double_t zc = fFieldCentre - xc * tan(alpha);
+    TVector3 posc = { xc, 0., zc };
+
+    Double_t xb = xc - L/2. * sin(theta) / cos(theta - alpha);
+    Double_t zb = zc - L/2. * cos(theta) / cos(theta - alpha);
+    TVector3 posb = { xb, 0., zb };
+
+    Double_t xd = xc + L/2. * sin(eta) / cos(eta - alpha);
+    Double_t zd = zc + L/2. * cos(eta) / cos(eta - alpha);
+    TVector3 posd = { xd, 0., zd };
+
+    a=new TF1("a","pol1",-500.,1650.);
+    b=new TF1("b","pol1",-500.,1650.);
+    b->SetParameter(0,xd-tan(eta-TMath::Pi()/2)*zd); b->SetParameter(1,tan(eta-TMath::Pi()/2));
+    Double_t zminimum_rho = 0.;
+    if (theta != 0) {
+      a->SetParameter(0,xb-tan(theta-TMath::Pi()/2)*zb); a->SetParameter(1,tan(theta-TMath::Pi()/2));
+      TF1 *rho_inter = new TF1("rho_inter",finter,-300.,1650.);
+      zminimum_rho = rho_inter->GetMinimumX();
+      }
+    if (theta == 0) {
+      zminimum_rho = zb;
+    }
+    Double_t x_rho = b->Eval(zminimum_rho);
+
+    //Double_t rho = abs(0.5*L/sin((eta-theta)/2.0)/cos(alpha-(theta+eta)/2.0));
+    //Double_t rho = abs(0.5*L*sin((eta-theta)/2.0)/cos((eta-theta)/2.0))/(1-cos(alpha));
+    Double_t rho = 0.5 * (sqrt(pow(x_rho-xb,2)+pow(zminimum_rho-zb,2)) + sqrt(pow(x_rho-xd,2)+pow(zminimum_rho-zd,2)));
+
     brho = rho * fBfield_Glad;
 
     return brho / 100.; //[mT]
@@ -325,6 +354,28 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     Double_t zb = zc - L / 2. * cos(theta) / cos(theta - alpha);
     TVector3 posb = { xb, 0., zb };
 
+    Double_t eta = atan((position3-position2)/9662.0) + beta;
+    Double_t xd = xc + L / 2. * sin(eta) / cos(eta - alpha);
+    Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
+    TVector3 posd = { xd, 0., zd };
+
+    a=new TF1("a","pol1",-500.,1650.);
+    b=new TF1("b","pol1",-500.,1650.);
+    // TF1 *a=new TF1("a","pol1",-200.,600.);
+    // TF1 *b=new TF1("b","pol1",-200.,600.);
+    b->SetParameter(0,xd-tan(eta-TMath::Pi()/2)*zd); b->SetParameter(1,tan(eta-TMath::Pi()/2));
+    Double_t zminimum_rho = 0.;
+    if (theta != 0) {
+      a->SetParameter(0,xb-tan(theta-TMath::Pi()/2)*zb); a->SetParameter(1,tan(theta-TMath::Pi()/2));
+      TF1 *rho_inter = new TF1("rho_inter",finter,-300.,1650.);
+      zminimum_rho = rho_inter->GetMinimumX();
+      }
+    if (theta == 0) {
+      zminimum_rho = zb;
+    }
+    Double_t x_rho = b->Eval(zminimum_rho);
+
+
     TVector3 ftrans_fi11 = {-416.31, 0.0, 1552.66 };
     TVector3 ftrans_fi10 = {-117.74, 0.0, 633.75 };
     TRotation frot;
@@ -339,25 +390,18 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     g_fi->SetPoint(0,pos_fi10lab.Z(),pos_fi10lab.X());
     g_fi->SetPoint(1,pos_fi11lab.Z(),pos_fi11lab.X());
 
-    Double_t eta = atan((position3-position2)/9662.0) + beta;
-
-    Double_t xd = xc + L / 2. * sin(eta) / cos(eta - alpha);
-    Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
-    TVector3 posd = { xd, 0., zd };
-
     a=new TF1("a","pol1",100.,1750.);
     b=new TF1("b","pol1",100.,1750.);
     g_fi->Fit("a","q+r0");
     b->SetParameter(0, fTofDGeoPar->GetPosX()-tan(TMath::Pi()/2+beta)*fTofDGeoPar->GetPosZ());
     b->SetParameter(1,tan(TMath::Pi()/2+beta));
-
     TF1 *f_intersection = new TF1("c",finter,200.,1650.);
-
     Double_t zf = f_intersection->GetMinimumX();
     Double_t xf = a->Eval(zf);
     TVector3 posf = { xf, 0., zf };
 
-    Double_t rho = abs(0.5*L/sin((eta-theta)/2.0)/cos(alpha-(theta+eta)/2.0));
+    //Double_t rho = abs(0.5*L/sin((eta-theta)/2.0)/cos(alpha-(theta+eta)/2.0));
+    Double_t rho = 0.5 * (sqrt(pow(x_rho-xb,2)+pow(zminimum_rho-zb,2)) + sqrt(pow(x_rho-xd,2)+pow(zminimum_rho-zd,2)));
 
     Double_t omega =
         2.0*asin(sqrt((posd.Z()-posb.Z()) * (posd.Z()-posb.Z()) + (posd.X()-posb.X()) * (posd.X()-posb.X()))/2.0/rho);
