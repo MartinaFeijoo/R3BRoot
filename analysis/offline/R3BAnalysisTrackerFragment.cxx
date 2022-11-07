@@ -288,8 +288,8 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
   }
 
   //std::cout << x_mus << fib10_x << fib11_x << std::endl;
-  Length = GetLength(x_mus/10., fib10_x/10., fib11_x/10., music_ang);
-  Brho = GetBrho(x_mus/10., fib10_x/10., fib11_x/10., music_ang);
+  Length = GetLength(x_mus/10., fib10_x, fib11_x, music_ang);
+  Brho = GetBrho(x_mus/10., fib10_x, fib11_x, music_ang);
 
   Double_t v = Length / tof / c;
   Double_t gamma = 1. / sqrt(1. - v*v);

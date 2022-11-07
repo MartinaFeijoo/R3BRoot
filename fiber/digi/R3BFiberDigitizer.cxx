@@ -158,8 +158,8 @@ void R3BFiberDigitizer::Exec(Option_t* opt)
             //std::cout << "fiber" << fiber << std::endl;
             // Add hit data
             AddHitData(1,
-                       vpos.X() * 10. + rand->Gaus(0., 0.1),
-                       vpos.Y() * 10. + rand->Gaus(0., 0.1),
+                       vpos.X() + rand->Gaus(0., 0.01),
+                       vpos.Y() + rand->Gaus(0., 0.01),
                        1,
                        time,
                        fiber,
