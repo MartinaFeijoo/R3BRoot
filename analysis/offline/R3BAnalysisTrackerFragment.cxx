@@ -44,6 +44,7 @@
 const Double_t c = 29.9792458;
 
 TF1 *a, *b;
+
 Double_t finter(double *x, double*par) {
    return TMath::Abs(a->EvalPar(x,par) - b->EvalPar(x,par));}
 
@@ -206,6 +207,9 @@ InitStatus R3BAnalysisTrackerFragment::Init()
         mgr->Register("TrackingData", "Analysis Tracking", fTrackingDataCA, !fOnline);
     }
 
+    a=new TF1("a","pol1",-500.,1750.);
+    b=new TF1("b","pol1",-500.,1750.);
+
     SetParameter();
 
     return kSUCCESS;
@@ -283,6 +287,7 @@ void R3BAnalysisTrackerFragment::Exec(Option_t* option)
       fib12_x = hit->GetX(); fib12_y = hit->GetY();
   }
 
+  //std::cout << x_mus << fib10_x << fib11_x << std::endl;
   Length = GetLength(x_mus/10., fib10_x/10., fib11_x/10., music_ang);
   Brho = GetBrho(x_mus/10., fib10_x/10., fib11_x/10., music_ang);
 
@@ -314,14 +319,13 @@ Double_t R3BAnalysisTrackerFragment::GetBrho(Double_t position1, Double_t positi
     Double_t zd = zc + L/2. * cos(eta) / cos(eta - alpha);
     TVector3 posd = { xd, 0., zd };
 
-    a=new TF1("a","pol1",-500.,1650.);
-    b=new TF1("b","pol1",-500.,1650.);
     b->SetParameter(0,xd-tan(eta-TMath::Pi()/2)*zd); b->SetParameter(1,tan(eta-TMath::Pi()/2));
     Double_t zminimum_rho = 0.;
     if (theta != 0) {
       a->SetParameter(0,xb-tan(theta-TMath::Pi()/2)*zb); a->SetParameter(1,tan(theta-TMath::Pi()/2));
       TF1 *rho_inter = new TF1("rho_inter",finter,-300.,1650.);
       zminimum_rho = rho_inter->GetMinimumX();
+      delete rho_inter;
       }
     if (theta == 0) {
       zminimum_rho = zb;
@@ -341,7 +345,7 @@ Double_t R3BAnalysisTrackerFragment::GetBrho(Double_t position1, Double_t positi
 
 Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t position2, Double_t position3, Double_t theta)
 {
-    Double_t length = 0.;
+
     Double_t L = fEffLength; // cm
     Double_t alpha = -14. * TMath::DegToRad();
     Double_t beta = -18. * TMath::DegToRad();
@@ -359,8 +363,8 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     Double_t zd = zc + L / 2. * cos(eta) / cos(eta - alpha);
     TVector3 posd = { xd, 0., zd };
 
-    a=new TF1("a","pol1",-500.,1650.);
-    b=new TF1("b","pol1",-500.,1650.);
+    // a=new TF1("a","pol1",-500.,1650.);
+    // b=new TF1("b","pol1",-500.,1650.);
     // TF1 *a=new TF1("a","pol1",-200.,600.);
     // TF1 *b=new TF1("b","pol1",-200.,600.);
     b->SetParameter(0,xd-tan(eta-TMath::Pi()/2)*zd); b->SetParameter(1,tan(eta-TMath::Pi()/2));
@@ -369,6 +373,7 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
       a->SetParameter(0,xb-tan(theta-TMath::Pi()/2)*zb); a->SetParameter(1,tan(theta-TMath::Pi()/2));
       TF1 *rho_inter = new TF1("rho_inter",finter,-300.,1650.);
       zminimum_rho = rho_inter->GetMinimumX();
+      delete rho_inter;
       }
     if (theta == 0) {
       zminimum_rho = zb;
@@ -386,17 +391,17 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     auto pos_fi10lab = frot*pos_fi10+ftrans_fi10;
 
     TGraph *g_fi = new TGraph();
-    g_fi->SetMarkerColor(kBlack); g_fi->SetMarkerStyle(8);
     g_fi->SetPoint(0,pos_fi10lab.Z(),pos_fi10lab.X());
     g_fi->SetPoint(1,pos_fi11lab.Z(),pos_fi11lab.X());
 
-    a=new TF1("a","pol1",100.,1750.);
-    b=new TF1("b","pol1",100.,1750.);
+    // a=new TF1("a","pol1",100.,1750.);
+    // b=new TF1("b","pol1",100.,1750.);
     g_fi->Fit("a","q+r0");
     b->SetParameter(0, fTofDGeoPar->GetPosX()-tan(TMath::Pi()/2+beta)*fTofDGeoPar->GetPosZ());
     b->SetParameter(1,tan(TMath::Pi()/2+beta));
     TF1 *f_intersection = new TF1("c",finter,200.,1650.);
     Double_t zf = f_intersection->GetMinimumX();
+    delete f_intersection; delete g_fi;
     Double_t xf = a->Eval(zf);
     TVector3 posf = { xf, 0., zf };
 
@@ -406,31 +411,39 @@ Double_t R3BAnalysisTrackerFragment::GetLength(Double_t position1, Double_t posi
     Double_t omega =
         2.0*asin(sqrt((posd.Z()-posb.Z()) * (posd.Z()-posb.Z()) + (posd.X()-posb.X()) * (posd.X()-posb.X()))/2.0/rho);
 
-    length = (zb - fTargetGeoPar->GetPosZ()) / cos(theta) + omega*rho + (posf.Z() - posd.Z()) / cos(eta);
+    Double_t length = 0.;
+    length = (zb +61.35) / cos(theta) + omega*rho + (posf.Z() - posd.Z()) / cos(eta);
+    // std::cout << zb <<" " << theta << " " << omega << " " << rho << " " << posf.Z() << " " << posd.Z() << " " << eta << std::endl;
+    // std::cout<< length << std::endl;
+
 
     return length; // [cm]
+    //return 0;
 }
 
 
 void R3BAnalysisTrackerFragment::Finish() {}
-void R3BAnalysisTrackerFragment::FinishEvent() {}
+void R3BAnalysisTrackerFragment::FinishEvent()
+{
+  LOG(DEBUG) << "Clearing AnalysisTrackerFragments Structures";
+  if (fHitItemsMus)
+      fHitItemsMus->Clear();
+  if (fHitItemsFib10)
+      fHitItemsFib10->Clear();
+  if (fHitItemsFib11)
+      fHitItemsFib11->Clear();
+  if (fHitItemsFib12)
+      fHitItemsFib12->Clear();
+  if (fHitItemsTofd)
+      fHitItemsTofd->Clear();
+
+}
 
 
 void R3BAnalysisTrackerFragment::Reset()
 {
-    LOG(DEBUG) << "Clearing AnalysisTrackerFragments Structures";
-    // if (fHitItemsMus)
-    //     fHitItemsMus->Clear();
-    // if (fHitItemsFib10)
-    //     fHitItemsFib10->Clear();
-    // if (fHitItemsFib11)
-    //     fHitItemsFib11->Clear();
-    // if (fHitItemsFib12)
-    //     fHitItemsFib12->Clear();
-    // if (fHitItemsTofd)
-    //     fHitItemsTofd->Clear();
-    if (fTrackingDataCA)
-        fTrackingDataCA->Clear();
+  if (fTrackingDataCA)
+      fTrackingDataCA->Clear();
 }
 
 R3BFragmentData* R3BAnalysisTrackerFragment::AddData(Double_t z,

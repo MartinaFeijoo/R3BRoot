@@ -109,9 +109,10 @@ class R3BAnalysisTrackerFragment : public FairTask
     R3BEventHeader* fHeader; // Event header
 
     Float_t music_ang = 0.; Float_t music_z = 0.;
+
     // Private method TrackingData
     R3BFragmentData* AddData(Double_t z, Double_t aq, Double_t beta, Double_t length, Double_t brho);
-    
+
 
 
 
