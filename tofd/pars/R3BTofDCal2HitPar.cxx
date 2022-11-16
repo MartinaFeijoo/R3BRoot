@@ -598,7 +598,7 @@ void R3BTofDCal2HitPar::CreateHistograms(Int_t iPlane, Int_t iBar)
     {
         char strName[255];
         sprintf(strName, "tofdiff_plane_%d_bar_%d", iPlane, iBar);
-        fh1_tofsync[iPlane - 1][iBar - 1] = new TH1F(strName, strName, 25000, 2950, 3150);
+        fh1_tofsync[iPlane - 1][iBar - 1] = new TH1F(strName, strName, 25000, -120, -100);
         fh1_tofsync[iPlane - 1][iBar - 1]->GetXaxis()->SetTitle("ToF [ns]");
     }
 }
