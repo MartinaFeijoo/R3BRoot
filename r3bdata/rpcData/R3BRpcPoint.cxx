@@ -33,10 +33,14 @@ R3BRpcPoint::R3BRpcPoint(Int_t trackID,
                          Double_t tof,
                          Double_t length,
                          Double_t eLoss,
-                         UInt_t EventId)
+                         UInt_t EventId,
+                         Double_t Z,
+                         Double_t A)
     : FairMCPoint(trackID, detID, posIn, momIn, tof, length, eLoss, EventId)
     , fChannelId(ident)
 {
+  fZ_in = Z;
+  fA_in = A;
 }
 
 R3BRpcPoint::R3BRpcPoint(const R3BRpcPoint& right)

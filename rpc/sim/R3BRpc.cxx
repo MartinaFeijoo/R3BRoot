@@ -14,6 +14,7 @@
 #include "FairLogger.h"
 #include "FairRootManager.h"
 #include "FairVolume.h"
+#include "FairRun.h"
 
 #include "R3BLogger.h"
 #include "R3BMCStack.h"
@@ -23,6 +24,8 @@
 #include "TClonesArray.h"
 #include "TGeoManager.h"
 #include "TVirtualMC.h"
+#include "TVirtualMCStack.h"
+#include "TParticle.h"
 
 R3BRpc::R3BRpc()
     : R3BRpc("")
@@ -74,12 +77,28 @@ Bool_t R3BRpc::ProcessHits(FairVolume* vol)
         gMC->TrackMomentum(fMomIn);
     }
 
+
+    //std::cout << "RPC"<< fZ_in << " " << fA_in << std::endl;
     // Sum energy loss for all steps in the active volume
     fELoss += gMC->Edep();
 
     // Set additional parameters at exit of active volume. Create R3BRpcPoint.
     if (gMC->IsTrackExiting() || gMC->IsTrackStop() || gMC->IsTrackDisappeared())
     {
+
+      Double_t fZ_in = 0.;
+      Double_t fA_in = 0.;
+
+      if (gMC->TrackPid()>1e6){
+        // Charge and mass are now obtained from PDG Code
+        fZ_in = int(gMC->TrackPid() / 10000) - 100000.;
+        fA_in = 0.1 * (gMC->TrackPid() - (100000 + fZ_in) * 10000.);
+      }
+
+      else{
+        fZ_in = gMC->TrackCharge();
+        fA_in = int(gMC->TrackMass()*1000/931.4940954);
+      }
         fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
         // fParentTrackID = gMC->GetStack()->GetCurrentParentTrackNumber();
         fVolumeID = vol->getMCid();
@@ -90,7 +109,7 @@ Bool_t R3BRpc::ProcessHits(FairVolume* vol)
 
         if (fELoss == 0.)
             return kFALSE;
-
+        //std::cout << "RPC"<< gMC->TrackPid() << " " << fZ_in << " " << fA_in << std::endl;
         AddPoint(fTrackID,
                  fVolumeID,
                  fStripID,
@@ -99,7 +118,9 @@ Bool_t R3BRpc::ProcessHits(FairVolume* vol)
                  fTime,
                  fLength,
                  fELoss,
-                 gMC->CurrentEvent());
+                 gMC->CurrentEvent(),
+                 fZ_in,
+                 fA_in);
 
         // Increment number of RpcPoints for this track
         R3BStack* stack = dynamic_cast<R3BStack*>(gMC->GetStack());
@@ -169,7 +190,9 @@ R3BRpcPoint* R3BRpc::AddPoint(Int_t trackID,
                               Double_t time,
                               Double_t length,
                               Double_t eLoss,
-                              UInt_t EventId)
+                              UInt_t EventId,
+                              Double_t fZ_in,
+                              Double_t fA_in)
 {
     TClonesArray& clref = *fRpcCollection;
     Int_t size = clref.GetEntriesFast();
@@ -178,7 +201,7 @@ R3BRpcPoint* R3BRpc::AddPoint(Int_t trackID,
         LOG(info) << "R3BRpc: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
                   << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
     }
-    return new (clref[size]) R3BRpcPoint(trackID, detID, ident, posIn, momIn, time, length, eLoss, EventId);
+    return new (clref[size]) R3BRpcPoint(trackID, detID, ident, posIn, momIn, time, length, eLoss, EventId, fZ_in, fA_in);
 }
 
 Bool_t R3BRpc::CheckIfSensitive(std::string name)

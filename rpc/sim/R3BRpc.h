@@ -122,7 +122,9 @@ class R3BRpc : public R3BDetector
                           Double_t time,
                           Double_t length,
                           Double_t eLoss,
-                          UInt_t EventId);
+                          UInt_t EventId,
+                          Double_t Z,
+                          Double_t A);
 
     /** Private method ResetParameters
      **

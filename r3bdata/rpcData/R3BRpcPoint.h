@@ -45,7 +45,9 @@ class R3BRpcPoint : public FairMCPoint
                 Double_t tof,
                 Double_t length,
                 Double_t eLoss,
-                UInt_t EventId);
+                UInt_t EventId,
+                Double_t Z,
+                Double_t A);
 
     /** Copy constructor **/
     R3BRpcPoint(const R3BRpcPoint&);
@@ -61,12 +63,15 @@ class R3BRpcPoint : public FairMCPoint
     Double_t GetYIn() const { return fY; }
     Double_t GetZIn() const { return fZ; }
     void PositionIn(TVector3& pos) { pos.SetXYZ(fX, fY, fZ); }
+    Double_t GetZ() const {return fZ_in; }
+    Double_t GetA() const {return fA_in; }
 
     /** Output to screen **/
     virtual void Print(const Option_t* opt) const;
 
   protected:
     Int_t fChannelId; ///< channel index
+    Double_t fZ_in, fA_in;
     // MODIFY ME!!!!!!!!!!!!!!!!!
 
     ClassDef(R3BRpcPoint, 1)
