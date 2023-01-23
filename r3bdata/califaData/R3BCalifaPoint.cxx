@@ -33,11 +33,15 @@ R3BCalifaPoint::R3BCalifaPoint(Int_t trackID,
                                Double_t eLoss,
                                Double_t Nf,
                                Double_t Ns,
-                               UInt_t EventId)
+                               UInt_t EventId,
+                               Int_t Z_in,
+                               Int_t A_in)
     : FairMCPoint(trackID, detID, posIn, momIn, tof, length, eLoss, EventId)
     , fCrystalId(ident)
     , fNf(Nf)
     , fNs(Ns)
+    , fZ_in(Z_in)
+    , fA_in(A_in)
 {
 }
 

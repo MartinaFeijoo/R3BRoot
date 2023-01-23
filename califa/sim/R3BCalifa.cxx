@@ -113,8 +113,8 @@ Bool_t R3BCalifa::ProcessHits(FairVolume* vol)
     Double_t dx = gMC->TrackStep() * fCsIDensity;
 
     Double_t M_in = gMC->TrackMass() * 1000.;
-    Double_t A_in = M_in / U_MEV;
-    Double_t Z_in = gMC->TrackCharge();
+    Int_t A_in = round(M_in / U_MEV);
+    Int_t Z_in = gMC->TrackCharge();
 
     const double Z_CsI = 54.;
     const double A_CsI = 129.905;   // g/mol
@@ -211,7 +211,9 @@ Bool_t R3BCalifa::ProcessHits(FairVolume* vol)
                  fELoss,
                  fNf,
                  fNs,
-                 gMC->CurrentEvent());
+                 gMC->CurrentEvent(),
+                 Z_in,
+                 A_in);
 
         // Increment number of CalifaPoints for this track
         R3BStack* stack = dynamic_cast<R3BStack*>(gMC->GetStack());
@@ -285,7 +287,9 @@ R3BCalifaPoint* R3BCalifa::AddPoint(Int_t trackID,
                                     Double_t eLoss,
                                     Double_t Nf,
                                     Double_t Ns,
-                                    UInt_t EventId)
+                                    UInt_t EventId,
+                                    Int_t Z_in,
+                                    Int_t A_in)
 {
     TClonesArray& clref = *fCalifaCollection;
     Int_t size = clref.GetEntriesFast();
@@ -294,7 +298,7 @@ R3BCalifaPoint* R3BCalifa::AddPoint(Int_t trackID,
         LOG(info) << "R3BCalifa: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
                   << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
     }
-    return new (clref[size]) R3BCalifaPoint(trackID, detID, ident, posIn, momIn, time, length, eLoss, Nf, Ns, EventId);
+    return new (clref[size]) R3BCalifaPoint(trackID, detID, ident, posIn, momIn, time, length, eLoss, Nf, Ns, EventId, Z_in, A_in);
 }
 
 void R3BCalifa::SelectGeometryVersion(Int_t version) { fGeometryVersion = version; }

@@ -48,7 +48,9 @@ class R3BCalifaPoint : public FairMCPoint
                    Double_t eLoss,
                    Double_t Nf,
                    Double_t Ns,
-                   UInt_t EventId);
+                   UInt_t EventId,
+                   Int_t fZ_in,
+                   Int_t fA_in);
 
     /** Copy constructor **/
     R3BCalifaPoint(const R3BCalifaPoint&);
@@ -66,10 +68,13 @@ class R3BCalifaPoint : public FairMCPoint
     Double_t GetNf() const { return fNf; }
     Double_t GetNs() const { return fNs; }
     void PositionIn(TVector3& pos) { pos.SetXYZ(fX, fY, fZ); }
+    Int_t GetZ() const {return fZ_in; }
+    Int_t GetA() const {return fA_in; }
 
   protected:
     Int_t fCrystalId;    ///< crystal index
     Double32_t fNf, fNs; ///< nf, ns components
+    Int_t fZ_in, fA_in;
 
     ClassDef(R3BCalifaPoint, 2)
 };

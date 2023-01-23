@@ -122,6 +122,7 @@ class R3BCalifa : public R3BDetector
     Int_t fNSteps;         //!  Number of steps in the active volume
     Double32_t fEinc;      //!  Total incident energy
     TList* flGeoPar;       //!
+    Int_t fZ_in; Int_t fA_in;
 
     TClonesArray* fCalifaCollection; //!  The point collection
 
@@ -146,7 +147,9 @@ class R3BCalifa : public R3BDetector
                              Double_t eLoss,
                              Double_t Nf,
                              Double_t Ns,
-                             UInt_t EventId);
+                             UInt_t EventId,
+                             Int_t Z_in,
+                             Int_t A_in);
 
     /** Private method ResetParameters
      **
