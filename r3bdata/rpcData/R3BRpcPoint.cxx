@@ -41,6 +41,7 @@ R3BRpcPoint::R3BRpcPoint(Int_t trackID,
 {
   fZ_in = Z;
   fA_in = A;
+  fTof = tof;
 }
 
 R3BRpcPoint::R3BRpcPoint(const R3BRpcPoint& right)

@@ -65,6 +65,7 @@ class R3BRpcPoint : public FairMCPoint
     void PositionIn(TVector3& pos) { pos.SetXYZ(fX, fY, fZ); }
     Double_t GetZ() const {return fZ_in; }
     Double_t GetA() const {return fA_in; }
+    Double_t GetTof() const {return fTof; }
 
     /** Output to screen **/
     virtual void Print(const Option_t* opt) const;
@@ -72,6 +73,7 @@ class R3BRpcPoint : public FairMCPoint
   protected:
     Int_t fChannelId; ///< channel index
     Double_t fZ_in, fA_in;
+    Double_t fTof;
     // MODIFY ME!!!!!!!!!!!!!!!!!
 
     ClassDef(R3BRpcPoint, 1)
