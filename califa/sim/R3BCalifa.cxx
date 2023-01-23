@@ -113,7 +113,7 @@ Bool_t R3BCalifa::ProcessHits(FairVolume* vol)
     Double_t dx = gMC->TrackStep() * fCsIDensity;
 
     Double_t M_in = gMC->TrackMass() * 1000.;
-    Double_t A_in = round(M_in / U_MEV);
+    Double_t A_in = M_in / U_MEV;
     Double_t Z_in = gMC->TrackCharge();
 
     const double Z_CsI = 54.;
