@@ -113,8 +113,8 @@ Bool_t R3BCalifa::ProcessHits(FairVolume* vol)
     Double_t dx = gMC->TrackStep() * fCsIDensity;
 
     Double_t M_in = gMC->TrackMass() * 1000.;
-    Int_t A_in = round(M_in / U_MEV);
-    Int_t Z_in = gMC->TrackCharge();
+    Double_t A_in = round(M_in / U_MEV);
+    Double_t Z_in = gMC->TrackCharge();
 
     const double Z_CsI = 54.;
     const double A_CsI = 129.905;   // g/mol
@@ -212,8 +212,8 @@ Bool_t R3BCalifa::ProcessHits(FairVolume* vol)
                  fNf,
                  fNs,
                  gMC->CurrentEvent(),
-                 Z_in,
-                 A_in);
+                 int(round(Z_in)),
+                 int(round(A_in));
 
         // Increment number of CalifaPoints for this track
         R3BStack* stack = dynamic_cast<R3BStack*>(gMC->GetStack());
