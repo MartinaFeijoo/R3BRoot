@@ -213,7 +213,7 @@ Bool_t R3BCalifa::ProcessHits(FairVolume* vol)
                  fNs,
                  gMC->CurrentEvent(),
                  int(round(Z_in)),
-                 int(round(A_in));
+                 int(round(A_in)));
 
         // Increment number of CalifaPoints for this track
         R3BStack* stack = dynamic_cast<R3BStack*>(gMC->GetStack());
