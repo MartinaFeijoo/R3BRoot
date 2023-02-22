@@ -62,6 +62,7 @@ class R3BRpcPoint : public FairMCPoint
     Double_t GetXIn() const { return fX; }
     Double_t GetYIn() const { return fY; }
     Double_t GetZIn() const { return fZ; }
+    Double_t GetPz() const { return fPz; }
     void PositionIn(TVector3& pos) { pos.SetXYZ(fX, fY, fZ); }
     Double_t GetZ() const {return fZ_in; }
     Double_t GetA() const {return fA_in; }
