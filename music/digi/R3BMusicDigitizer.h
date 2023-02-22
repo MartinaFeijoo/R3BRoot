@@ -54,7 +54,6 @@ class R3BMusicDigitizer : public FairTask
     void SetPosResolution(double sig) { fSigmaX = sig; }
 
   private:
-    TString fName;
     double fSigmaX;
     TClonesArray* fMCTrack;
     TClonesArray* fMusicPoints;

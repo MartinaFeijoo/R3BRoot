@@ -97,8 +97,8 @@ void R3BMusicDigitizer::Exec(Option_t*)
     {
         return;
     // Data from Point level
-    R3BMusicPoint** pointData;
-    pointData = new R3BMusicPoint*[nHits];
+    // R3BMusicPoint** pointData;
+    // pointData = new R3BMusicPoint*[nHits];
     Int_t TrackId = 0, PID = 0, anodeId = 0;
     Double_t x[nHits], fZ_out[nHits];
     Double_t Eave = 0.; Double_t z = 0.; Double_t theta = 0.;
@@ -116,16 +116,16 @@ void R3BMusicDigitizer::Exec(Option_t*)
 
         auto Track = dynamic_cast<R3BMCTrack*>(fMCTrack->At(TrackId));
         PID = Track->GetPdgCode();
-        anodeId = pointData[i]->GetDetCopyID();
+        anodeId = pointData[i].GetDetCopyID();
 
-        Double_t fX_in = pointData[i]->GetXIn();
-        Double_t fX_out = pointData[i]->GetXOut();
+        Double_t fX_in = pointData[i].GetXIn();
+        Double_t fX_out = pointData[i].GetXOut();
         x[i] = (fX_out + fX_in) / 2. ;
         if (x_save == 0 && anodeId == 3)
           x_save = x[anodeId];
-        z += pointData[i]->GetZFF();
-        Eave += pointData[i]->GetEnergyLoss();
-        fZ_out[i] = pointData[i]->GetZOut();
+        z += pointData[i].GetZFF();
+        Eave += pointData[i].GetEnergyLoss();
+        fZ_out[i] = pointData[i].GetZOut();
 
         //std::cout << i << " " << x[i] << " " << x_save << " z=" << fZ_out[i] << std::endl;
     }
@@ -140,12 +140,12 @@ void R3BMusicDigitizer::Exec(Option_t*)
           AddHitData(theta, z, Eave, x_save);
     }
 
-    if (pointData)
-        delete pointData;
+    // if (pointData)
+    //     delete pointData;
 
     return;
 }
-
+}
 // -----   Public method ReInit   ----------------------------------------------
 InitStatus R3BMusicDigitizer::ReInit() { return kSUCCESS; }
 
