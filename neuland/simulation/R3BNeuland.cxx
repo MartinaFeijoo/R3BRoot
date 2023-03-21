@@ -123,11 +123,11 @@ Bool_t R3BNeuland::ProcessHits(FairVolume*)
     if (gMC->IsTrackExiting() || gMC->IsTrackStop() || gMC->IsTrackDisappeared())
     {
         // Do not save a hit if no energy deposited
-        if (fELoss < 1e-20 || fLightYield < 1e-20)
-        {
-            ResetValues();
-            return kTRUE;
-        }
+        // if (fELoss < 1e-20 || fLightYield < 1e-20)
+        // {
+        //     ResetValues();
+        //     return kTRUE;
+        // }
 
         fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
         gMC->TrackPosition(fPosOut);
