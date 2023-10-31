@@ -128,9 +128,16 @@ void addCrystal2Cluster(struct califa_candidate* cluster,
                         vector<Int_t>* usedCrystals,
                         Int_t fTotalCrystals)
 {
-    cluster->energy += crystalCal->GetEnergy();
-    cluster->ns += crystalCal->GetNs();
-    cluster->nf += crystalCal->GetNf();
+    if (!isnan(crystalCal->GetEnergy()))
+      cluster->energy += crystalCal->GetEnergy();
+    else
+      cluster->energy += crystalCal->GetToT_Energy();
+
+    if (crystalCal->GetEnergy()>1000)
+    {
+    	cluster->ns += crystalCal->GetNs();
+    	cluster->nf += crystalCal->GetNf();
+    }
     cluster->crystalList.push_back(crystalCal->GetCrystalId());
 
     usedCrystals->push_back(crystalCal->GetCrystalId());
@@ -277,7 +284,11 @@ void R3BCalifaCrystalCal2Cluster::Exec(Option_t* opt)
     for (Int_t i = 0; i < numCrystalHits; i++)
     {
         cryId = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetCrystalId();
-        cryEnergy = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetEnergy();
+
+        if (cryId >= 2432)
+          cryEnergy = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetEnergy();
+        else
+          cryEnergy = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetToT_Energy();
 
         if (cryEnergy >= fCrystalThreshold)
             allCrystalVec.push_back(dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i)));
