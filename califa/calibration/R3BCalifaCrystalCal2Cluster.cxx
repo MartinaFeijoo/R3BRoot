@@ -285,10 +285,10 @@ void R3BCalifaCrystalCal2Cluster::Exec(Option_t* opt)
     {
         cryId = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetCrystalId();
 
-        if (cryId >= 2432)
-          cryEnergy = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetEnergy();
-        else
+        if (cryId <= 2432 && !fSimulation)
           cryEnergy = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetToT_Energy();
+        else
+          cryEnergy = dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i))->GetEnergy();
 
         if (cryEnergy >= fCrystalThreshold)
             allCrystalVec.push_back(dynamic_cast<R3BCalifaCrystalCalData*>(fCrystalCalData->At(i)));
