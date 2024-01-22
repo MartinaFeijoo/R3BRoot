@@ -36,7 +36,7 @@ set(SRCS
     R3BEventHeaderPropagator.cxx
     R3BException.cxx
     R3BFileSource.cxx
-    R3BFileSource2.cxx
+    #R3BFileSource2.cxx
     R3BLogger.cxx
     R3BModule.cxx
     R3BTcutPar.cxx
@@ -54,7 +54,7 @@ set(HEADERS
     R3BEventHeaderPropagator.h
     R3BException.h
     R3BFileSource.h
-    R3BFileSource2.h
+    #R3BFileSource2.h
     R3BIOConnector.h
     R3BLogger.h
     R3BModule.h
