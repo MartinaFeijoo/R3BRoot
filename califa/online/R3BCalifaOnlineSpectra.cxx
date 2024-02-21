@@ -631,6 +631,16 @@ InitStatus R3BCalifaOnlineSpectra::Init()
     fh2_Califa_coinE->GetXaxis()->CenterTitle(true);
     fh2_Califa_coinE->GetYaxis()->CenterTitle(true);
     fh2_Califa_coinE->Draw("COLZ");
+    
+    cCalifaCoinE->cd(2);
+    fh2_Califa_coinE_p2p = R3B::root_owned<TH2F>(
+        "fh2_Califa_energy_correlations_p2p", "Califa energy correlations for p2p", (maxE-minE)/1000., minE/1000., maxE/1000., (maxE-minE)/1000., minE/1000., maxE/1000.);
+    fh2_Califa_coinE_p2p->GetXaxis()->SetTitle("Energy (MeV)");
+    fh2_Califa_coinE_p2p->GetYaxis()->SetTitle("Energy (MeV)");
+    fh2_Califa_coinE_p2p->GetYaxis()->SetTitleOffset(1.2);
+    fh2_Califa_coinE_p2p->GetXaxis()->CenterTitle(true);
+    fh2_Califa_coinE_p2p->GetYaxis()->CenterTitle(true);
+    fh2_Califa_coinE_p2p->Draw("COLZ");
 
     cCalifaCoinE->cd(2);
     fh2_Califa_coinE_p2p = R3B::root_owned<TH2F>("fh2_Califa_energy_correlations_p2p",
@@ -793,28 +803,50 @@ InitStatus R3BCalifaOnlineSpectra::Init()
 
     // CANVAS energy vs wrs
     Name1 = "Califa_wr_vs_energy";
-    Name2 = "fh2_wr_vs_energy_left";
-    Name3 = "Califa WR vs hit-energy left side";
+    Name2 = "fh2_wr_vs_energy_left_p";
+    Name3 = "WR difference (Califa-Master) vs hit-energy left side PROTON RANGE";
     cCalifa_wr_energy = new TCanvas(Name1.c_str(), Name1.c_str(), 10, 10, 500, 500);
-    cCalifa_wr_energy->Divide(1, 2);
-    fh2_Cal_wr_energy_l = R3B::root_owned<TH2F>(Name2.c_str(), Name3.c_str(), 700, -4000, 4000, bins, minE, maxE);
-    fh2_Cal_wr_energy_l->GetXaxis()->SetTitle("WR difference (Master-Califa)");
-    fh2_Cal_wr_energy_l->GetYaxis()->SetTitle("Energy [keV]");
-    fh2_Cal_wr_energy_l->GetYaxis()->SetTitleOffset(1.4);
-    fh2_Cal_wr_energy_l->GetXaxis()->CenterTitle(true);
-    fh2_Cal_wr_energy_l->GetYaxis()->CenterTitle(true);
+    cCalifa_wr_energy->Divide(2, 2);
+    fh2_Cal_wr_energy_l_p = R3B::root_owned<TH2F>(Name2.c_str(), Name3.c_str(), 700, 0, 6000, bins, 0, fMaxBinChannelFebex);
+    fh2_Cal_wr_energy_l_p->GetXaxis()->SetTitle("WR difference (Master-Califa)");
+    fh2_Cal_wr_energy_l_p->GetYaxis()->SetTitle("Energy [ch]");
+    fh2_Cal_wr_energy_l_p->GetYaxis()->SetTitleOffset(1.4);
+    fh2_Cal_wr_energy_l_p->GetXaxis()->CenterTitle(true);
+    fh2_Cal_wr_energy_l_p->GetYaxis()->CenterTitle(true);
     cCalifa_wr_energy->cd(1);
-    fh2_Cal_wr_energy_l->Draw("COLZ");
-    Name2 = "fh2_wr_vs_energy_right";
-    Name3 = "Califa WR vs hit-energy right side";
-    fh2_Cal_wr_energy_r = R3B::root_owned<TH2F>(Name2.c_str(), Name3.c_str(), 700, -4000, 4000, bins, minE, maxE);
-    fh2_Cal_wr_energy_r->GetXaxis()->SetTitle("WR difference (Master-Califa)");
-    fh2_Cal_wr_energy_r->GetYaxis()->SetTitle("Energy [keV]");
-    fh2_Cal_wr_energy_r->GetYaxis()->SetTitleOffset(1.4);
-    fh2_Cal_wr_energy_r->GetXaxis()->CenterTitle(true);
-    fh2_Cal_wr_energy_r->GetYaxis()->CenterTitle(true);
+    fh2_Cal_wr_energy_l_p->Draw("COLZ");
+    Name2 = "fh2_wr_vs_energy_right_p";
+    Name3 = "WR difference (Califa-Master) vs hit-energy right side PROTON RANGE";
+    fh2_Cal_wr_energy_r_p = R3B::root_owned<TH2F>(Name2.c_str(), Name3.c_str(), 700, 0, 6000, bins, 0, fMaxBinChannelFebex);
+    fh2_Cal_wr_energy_r_p->GetXaxis()->SetTitle("WR difference (Master-Califa)");
+    fh2_Cal_wr_energy_r_p->GetYaxis()->SetTitle("Energy [ch]");
+    fh2_Cal_wr_energy_r_p->GetYaxis()->SetTitleOffset(1.4);
+    fh2_Cal_wr_energy_r_p->GetXaxis()->CenterTitle(true);
+    fh2_Cal_wr_energy_r_p->GetYaxis()->CenterTitle(true);
     cCalifa_wr_energy->cd(2);
-    fh2_Cal_wr_energy_r->Draw("COLZ");
+    fh2_Cal_wr_energy_r_p->Draw("COLZ");
+
+    Name2 = "fh2_wr_vs_energy_left_g";
+    Name3 = "WR difference (Califa-Master) vs hit-energy left side GAMMA RANGE";
+    fh2_Cal_wr_energy_l_g = R3B::root_owned<TH2F>(Name2.c_str(), Name3.c_str(), 700, 0, 6000, bins, 0, fMaxBinChannelFebex);
+    fh2_Cal_wr_energy_l_g->GetXaxis()->SetTitle("WR difference (Master-Califa)");
+    fh2_Cal_wr_energy_l_g->GetYaxis()->SetTitle("Energy [ch]");
+    fh2_Cal_wr_energy_l_g->GetYaxis()->SetTitleOffset(1.4);
+    fh2_Cal_wr_energy_l_g->GetXaxis()->CenterTitle(true);
+    fh2_Cal_wr_energy_l_g->GetYaxis()->CenterTitle(true);
+    cCalifa_wr_energy->cd(3);
+    fh2_Cal_wr_energy_l_g->Draw("COLZ");
+    Name2 = "fh2_wr_vs_energy_right_g";
+    Name3 = "WR difference (Califa-Master) vs hit-energy right side GAMMA RANGE";
+    fh2_Cal_wr_energy_r_g = R3B::root_owned<TH2F>(Name2.c_str(), Name3.c_str(), 700, 0, 6000, bins, 0, fMaxBinChannelFebex);
+    fh2_Cal_wr_energy_r_g->GetXaxis()->SetTitle("WR difference (Master-Califa)");
+    fh2_Cal_wr_energy_r_g->GetYaxis()->SetTitle("Energy [ch]");
+    fh2_Cal_wr_energy_r_g->GetYaxis()->SetTitleOffset(1.4);
+    fh2_Cal_wr_energy_r_g->GetXaxis()->CenterTitle(true);
+    fh2_Cal_wr_energy_r_g->GetYaxis()->CenterTitle(true);
+    cCalifa_wr_energy->cd(4);
+    fh2_Cal_wr_energy_r_g->Draw("COLZ");
+   
 
     cCalifaTriggers = new TCanvas("Califa_triggers", "Califa_triggers", 10, 10, 500, 500);
     fh1_CalifaTriggers = R3B::root_owned<TH1F>("califa_triggers", "califa_triggers", 3, -0.5, 2.5);
@@ -1005,8 +1037,10 @@ void R3BCalifaOnlineSpectra::Reset_CALIFA_Histo()
         fh1_wrs[1]->Reset();
         if (fHitItemsCalifa)
         {
-            fh2_Cal_wr_energy_r->Reset();
-            fh2_Cal_wr_energy_l->Reset();
+            fh2_Cal_wr_energy_r_p->Reset();
+            fh2_Cal_wr_energy_r_g->Reset();
+            fh2_Cal_wr_energy_l_p->Reset();
+            fh2_Cal_wr_energy_l_g->Reset();
         }
     }
 
@@ -1497,11 +1531,18 @@ void R3BCalifaOnlineSpectra::Exec(Option_t* /*option*/)
             Int_t cryId = hit->GetCrystalId();
 
             // compensate slave exploder delays:
-            int64_t wrc = hit->GetWrts() + 245 * (fMap_Par->GetPreamp(cryId) > 8);
+            int64_t wrc = hit->GetWrts();
+            //int64_t wrc = hit->GetWrts() + 245 * (fMap_Par->GetPreamp(cryId) > 8);
             if (wrm > 0.)
-            {
+     
+     
+	    {
                 bool side = !(fMap_Par->GetHalf(cryId) % 2);
                 fh1_wrs[side]->Fill(wrc - wrm);
+		if (side==0 && cryId > 4977) fh2_Cal_wr_energy_l_p->Fill(wrc-wrm,hit->GetEnergy());
+		if (side==0 && cryId <= 2545) fh2_Cal_wr_energy_l_g->Fill(wrc-wrm,hit->GetEnergy());
+		if (side==1 && cryId > 2545) fh2_Cal_wr_energy_r_p->Fill(wrc-wrm,hit->GetEnergy());
+		if (side==1 && cryId <= 2545) fh2_Cal_wr_energy_r_g->Fill(wrc-wrm,hit->GetEnergy());
             }
 
             if ((fMap_Par->GetInUse(cryId) == 1 && cryId <= fNbCalifaCrystals / 2) ||
@@ -1556,6 +1597,10 @@ void R3BCalifaOnlineSpectra::Exec(Option_t* /*option*/)
             Int_t cryId = hit->GetCrystalId();
 
             fh2_Califa_cryId_energy_cal->Fill(cryId, hit->GetEnergy());
+            
+            
+            if (cryId>3344&&cryId<3473 && hit->GetEnergy()>10000.)
+               cond_califa_veto = true;
 
             if (cryId > 3344 && cryId < 3473 && hit->GetEnergy() > 10000.)
                 cond_califa_veto = true;
@@ -1601,7 +1646,6 @@ void R3BCalifaOnlineSpectra::Exec(Option_t* /*option*/)
         std::vector<double> califa_theta;
         std::vector<double> califa_phi;
         std::vector<double> califa_e;
-
         for (Int_t ihit = 0; ihit < nHits; ihit++)
         {
             auto hit = dynamic_cast<R3BCalifaClusterData*>(fHitItemsCalifa->At(ihit));

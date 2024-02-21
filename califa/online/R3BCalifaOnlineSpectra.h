@@ -279,8 +279,10 @@ class R3BCalifaOnlineSpectra : public FairTask
     TH1F* fh1_Califa_total_energy;
     TH1F* fh1_openangle;
     TH2F* fh2_openangle_tpat;
-    TH2F* fh2_Cal_wr_energy_l;
-    TH2F* fh2_Cal_wr_energy_r;
+    TH2F* fh2_Cal_wr_energy_l_p;
+    TH2F* fh2_Cal_wr_energy_l_g;
+    TH2F* fh2_Cal_wr_energy_r_p;
+    TH2F* fh2_Cal_wr_energy_r_g;
     std::vector<TH2F*> fh2_Califa_NsNf;
     TH2F* fh2_Califa_EtrigCor[4];
     TH1F* fh1_Califa_Etrig[2];
