@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2023 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -10,15 +10,14 @@
  * granted to it by virtue of its status as an Intergovernmental Organization *
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
-
-#include <TClonesArray.h>
-#include <TMath.h>
-#include <TRandom.h>
+#include "TClonesArray.h"
+#include "TMath.h"
+#include "TRandom.h"
 #include <iomanip>
 
-#include <FairLogger.h>
-#include <FairRootManager.h>
-#include <FairRuntimeDb.h>
+#include "FairLogger.h"
+#include "FairRootManager.h"
+#include "FairRuntimeDb.h"
 
 #include "R3BCalifaCrystalCalData.h"
 #include "R3BCalifaCrystalCalPar.h"
@@ -30,6 +29,14 @@
 // R3BCalifaMapped2CrystalCal::Constructor
 R3BCalifaMapped2CrystalCal::R3BCalifaMapped2CrystalCal()
     : FairTask("R3BCalifaMapped2CrystalCal")
+    , fNumCrystals(0)
+    , fNumParams(0)
+    , fNumTotParams(0)
+    , fCalParams(NULL)
+    , fCal_Par(NULL)
+    , fOnline(kFALSE)
+    , fCalifaMappedDataCA(NULL)
+    , fCalifaCryCalDataCA(NULL)
 {
 }
 
@@ -89,7 +96,7 @@ void R3BCalifaMapped2CrystalCal::SetParameter()
     fNumCrystals = fCal_Par->GetNumCrystals();    // Number of Crystals
     fNumParams = fCal_Par->GetNumParametersFit(); // Number of Parameters
 
-    fCalParams = const_cast<TArrayF*>(fCal_Par->GetCryCalParams()); // Array with the Cal parameters
+    fCalParams = fCal_Par->GetCryCalParams(); // Array with the Cal parameters
     assert(fCalParams->GetSize() >= fNumCrystals * fNumParams);
 
     R3BLOG(info, "Max Crystal ID " << fNumCrystals);
@@ -144,15 +151,25 @@ InitStatus R3BCalifaMapped2CrystalCal::Init()
 {
     R3BLOG(info, "");
 
-    FairRootManager* rootManager = FairRootManager::Instance();
-    R3BLOG_IF(fatal, rootManager == nullptr, "FairRootManager not found");
-
     // INPUT DATA
+    FairRootManager* rootManager = FairRootManager::Instance();
+    if (!rootManager)
+    {
+        R3BLOG(fatal, "FairRootManager not found");
+        return kFATAL;
+    }
+
     fCalifaMappedDataCA = dynamic_cast<TClonesArray*>(rootManager->GetObject("CalifaMappedData"));
-    R3BLOG_IF(fatal, fCalifaMappedDataCA == nullptr, "CalifaMappedData not found");
+    if (!fCalifaMappedDataCA)
+    {
+        R3BLOG(fatal, "CalifaMappedData not found");
+        return kFATAL;
+    }
 
     // OUTPUT DATA
+    // Calibrated data
     fCalifaCryCalDataCA = new TClonesArray("R3BCalifaCrystalCalData");
+
     rootManager->Register("CalifaCrystalCalData", "CALIFA Crystal Cal", fCalifaCryCalDataCA, !fOnline);
 
     SetParameter();
@@ -244,7 +261,8 @@ void R3BCalifaMapped2CrystalCal::Exec(Option_t* option)
         {
             double a0 = fCalTotParams->GetAt(fNumTotParams * (crystalId - 1));
             double a1 = fCalTotParams->GetAt(fNumTotParams * (crystalId - 1) + 1);
-            TotCal = a0 * TMath::Exp(Tot / a1);
+            if (Tot>0) TotCal = a0 * TMath::Exp(Tot / a1);
+	    else TotCal = 0;
         }
         AddCalData(crystalId, cal[en], cal[Nf], cal[Ns], wrts, TotCal);
     }
