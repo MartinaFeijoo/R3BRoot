@@ -1657,10 +1657,6 @@ void R3BCalifaOnlineSpectra::Exec(Option_t* /*option*/)
         std::vector<double> califa_theta;
         std::vector<double> califa_phi;
         std::vector<double> califa_e;
-<<<<<<< HEAD
-=======
-
->>>>>>> d72796c7 (clang-format)
         for (Int_t ihit = 0; ihit < nHits; ihit++)
         {
             auto hit = dynamic_cast<R3BCalifaClusterData*>(fHitItemsCalifa->At(ihit));
