@@ -15,17 +15,51 @@
 # in the array. The extension is already found. Any number of sources could be
 # listed here.
 
+Set(SYSTEM_INCLUDE_DIRECTORIES
+${SYSTEM_INCLUDE_DIRECTORIES}
+${BASE_INCLUDE_DIRECTORIES}
+)
+
+set(INCLUDE_DIRECTORIES
+#put here all directories where header files are located
+${R3BROOT_SOURCE_DIR}/tracking
+${R3BROOT_SOURCE_DIR}/field
+${R3BROOT_SOURCE_DIR}/tof
+${R3BROOT_SOURCE_DIR}/r3bbase
+${R3BROOT_SOURCE_DIR}/r3bdata
+${R3BROOT_SOURCE_DIR}/r3bdata/tofData
+${R3BROOT_SOURCE_DIR}/r3bdata/pspData
+${R3BROOT_SOURCE_DIR}/r3bdata/fibData
+${R3BROOT_SOURCE_DIR}/r3bdata/mwpcData
+${R3BROOT_SOURCE_DIR}/r3bdata/frsData
+${R3BROOT_SOURCE_DIR}/r3bdata/musicData
+${R3BROOT_SOURCE_DIR}/r3bdata/losData
+${R3BROOT_SOURCE_DIR}/r3bdata/footData
+)
+
+include_directories( ${INCLUDE_DIRECTORIES})
+include_directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
+
+set(LINK_DIRECTORIES
+${ROOT_LIBRARY_DIR}
+${FAIRROOT_LIBRARY_DIR}
+)
+
+link_directories( ${LINK_DIRECTORIES})
+
 set(SRCS
-    R3BTPropagator.cxx
-    R3BTGeoPar.cxx
-    R3BFragmentTracker.cxx
-    R3BFragmentFitterGeneric.cxx
-    R3BFragmentFitterChi2.cxx
-    R3BTrackingDetector.cxx
-    R3BTrackingParticle.cxx
-    R3BTrackingSetup.cxx
-    R3BMDFWrapper.cxx
-    R3BTrackingS515.cxx)
+R3BTPropagator.cxx
+R3BTGeoPar.cxx
+R3BFragmentTracker.cxx
+R3BFragmentFitterGeneric.cxx
+R3BFragmentFitterChi2.cxx
+R3BTrackingDetector.cxx
+R3BTrackingParticle.cxx
+R3BTrackingSetup.cxx
+R3BMDFWrapper.cxx
+R3BTrackingS515.cxx
+R3BTrackingS522.cxx
+)
 
 set(HEADERS
     R3BTPropagator.h
